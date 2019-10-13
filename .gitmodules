@@ -1,0 +1,15 @@
+[submodule "local/auto-save"]
+	path = local/auto-save
+	url = https://github.com/manateelazycat/auto-save.git
+[submodule "local/insert-translated-name"]
+	path = local/insert-translated-name
+	url = https://github.com/manateelazycat/insert-translated-name.git
+[submodule "local/snails"]
+	path = local/snails
+	url = https://github.com/manateelazycat/snails.git
+[submodule "local/exec-path-from-shell"]
+	path = local/exec-path-from-shell
+	url = https://github.com/purcell/exec-path-from-shell.git
+[submodule "local/google-translate"]
+	path = local/google-translate
+	url = https://github.com/loyalpartner/google-translate.git
