@@ -1,0 +1,22 @@
+
+# my emacs conifg
+
+## Use different versions of the configuration
+
+#+BEGIN_SRC emacs-lisp
+(setq config-path (let ((index (read-from-minibuffer "choose:")))
+  (cond
+   ((string= index "1") "~/emacs-config/init.el")
+   ((string= index "2") "~/purcell-emacs-config/init.el")
+      (t "~/emacs-config")
+   )
+  ))
+
+
+(defconst user-emacs-directory
+  (file-name-directory
+   (file-chase-links
+    (expand-file-name config-path))) "The giant turtle on which the world rests.")
+
+(load-file (expand-file-name "init.el" user-emacs-directory))
+#+END_SRC
