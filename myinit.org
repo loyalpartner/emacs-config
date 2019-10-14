@@ -217,16 +217,17 @@
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode :ensure t
     :commands lsp
-    ;; :hook
-    ;; ((js2-mode . lsp))
-    )
+    :hook
+    ((js2-mode . lsp)))
 
 
   (use-package company-lsp
     :ensure t
     :commands company-lsp
     :config
-    (push 'company-lsp company-backends))
+    ;; (push 'company-lsp company-backends)
+    (setq company-lsp-enable-recompletion t)
+    (setq lsp-auto-configure nil))
 #+END_SRC
 * Reveal.js
 #+BEGIN_SRC emacs-lisp
