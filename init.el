@@ -1,6 +1,8 @@
 ;;; my config
 (require 'package)
 
+;; (setq debug-on-event t)
+
 (setq package-enable-at-startup nil)
 (setq package-archives '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
 			 ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))

@@ -38,8 +38,10 @@
       (set-file-name-coding-system 'gbk)))
   (add-hook 'shell-mode-hook 'change-shell-mode-coding)
 
-  (use-package exec-path-from-shell)
-  (when (memq window-system '(mac ns x))
+  (use-package exec-path-from-shell
+    :if (memq window-system '(mac ns))
+    :ensure t
+    :config
     (exec-path-from-shell-initialize))
 
   (global-unset-key (kbd "C-z"))
@@ -215,7 +217,9 @@
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode :ensure t
     :commands lsp
-    :hook ((js2-mode . lsp)))
+    ;; :hook
+    ;; ((js2-mode . lsp))
+    )
 
 
   (use-package company-lsp
@@ -325,8 +329,8 @@
   ;;   :ensure t
   ;;   :hook (js2-mode . tern-mode))
 
-  (eval-after-load "lsp"
-    (add-hook 'js2-mode-hook 'lsp))
+  ;; (eval-after-load "lsp"
+  ;;   (add-hook 'js2-mode-hook 'lsp))
 #+END_SRC
 * org
 #+BEGIN_SRC emacs-lisp
@@ -506,8 +510,7 @@
 #+BEGIN_SRC emacs-lisp
   (use-package server
     :config
-    (unless (and (fboundp 'server-running-p)
-		 (server-running-p))
+    (unless (eq 't (server-running-p))
       (server-start)))
 #+END_SRC
 * edit config
@@ -524,4 +527,16 @@
     (global-undo-tree-mode)
     :custom
     (undo-tree-auto-save-history t))
+
+  (use-package helpful
+    :ensure t
+    :bind (("C-h f" . 'helpful-callable)
+	   ("C-h v" . 'helpful-variable)
+	   ("C-h k" . 'helpful-key)))
+
+  (use-package restart-emacs
+    :ensure
+    :commands restart-emacs)
+
+  (use-package fuz :ensure t)
 #+END_SRC
