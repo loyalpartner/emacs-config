@@ -92,12 +92,7 @@
   (use-package which-key
     :ensure t
     :config
-    (which-key-mode)
-    :custom
-    (which-key-side-window-location 'right)
-    (which-key-side-window-max-width 0.33)
-    (which-key-side-window-max-height 0.25)
-    (which-key-popup-type 'side-window))
+    (which-key-mode))
 #+END_SRC
 
 * window
@@ -287,7 +282,7 @@
       (setq default-input-method "pyim")
       (setq pyim-page-tooltip 'posframe))
 #+END_SRC
-* lispy
+* COMMENT lispy
 #+BEGIN_SRC emacs-lisp
   (use-package lispy
     :ensure t
@@ -320,6 +315,12 @@
    '(add-to-list 'company-backends '(company-anaconda :with company-capf company-yasnippet)))
 #+END_SRC
 
+* autohotkey
+#+BEGIN_SRC emacs-lisp
+  (use-package ahk-mode
+    :ensure t
+    :if (eq system-type 'windows-nt))
+#+END_SRC
 * javascript
 #+BEGIN_SRC emacs-lisp
   (use-package js2-mode
@@ -519,9 +520,27 @@
   (use-package expand-region
     :ensure t
     :bind ("C-=" . er/expand-region))
+
+
+  (use-package paredit
+    :ensure t
+    :hook ((emacs-lisp-mode . paredit-mode)
+	   (ielm-mode . paredit-mode)
+	   (lisp-mode . paredit-mode)
+	  ))
+
+  ;; (use-package paredit-everywhere
+  ;;   :ensure t
+  ;;   :bind (:map )
+  ;;   :hook (prog-mode . paredit-everywhere-mode))
 #+END_SRC
 * tools
 #+BEGIN_SRC emacs-lisp
+  ;; (use-package evil
+  ;;   :ensure t
+  ;;   :config
+  ;;   (evil-mode 1))
+
   (use-package undo-tree
     :ensure t
     :config
@@ -539,5 +558,6 @@
     :ensure
     :commands restart-emacs)
 
-  (use-package fuz :ensure t)
+  ;; (use-package fuz :ensure t
+  ;;   :if (not (eq system-type 'windows-nt)))
 #+END_SRC
