@@ -2,59 +2,65 @@
 #+PROPERTY: header-args :comments yes :results silent
 * interface tweaks
 #+BEGIN_SRC emacs-lisp
-    (setq inhibit-startup-message t)
-    (tool-bar-mode -1)
-    (scroll-bar-mode -1)
-    (fset 'yes-or-no-p 'y-or-n-p)
-    (global-set-key (kbd "<f5>") 'revert-buffer)
-    (setq indo-enable-flex-matching t)
-    (setq ido-everywhere t)
-    (ido-mode 1)
+  (setq inhibit-startup-message t)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (global-set-key (kbd "<f5>") 'revert-buffer)
+  (setq indo-enable-flex-matching t)
+  (setq ido-everywhere t)
+  (ido-mode 1)
+  (setq column-number-mode 1)
+  (blink-cursor-mode -1)
+  (global-hl-line-mode)
+  (setq ring-bell-function 'ignore)
+  (setq mouse-yank-at-point t)
+  (setq split-width-threshold nil)
 
-    ;;(blank-cursor-mode -1)
-    (setq ring-bell-function 'ignore)
-    (setq mouse-yank-at-point t)
-    (setq split-width-threshold nil)
+  ;;; make make ring easy to use.
+  (setq set-mark-command-repeat-pop t)
+  (defalias 'list-buffers 'ibuffer)
 
-    ;;; make make ring easy to use.
-    (setq set-mark-command-repeat-pop t)
-    (defalias 'list-buffers 'ibuffer)
+  ;; local variable safe
+  (setq enable-local-variables t)
+  (prefer-coding-system 'utf-8)
+  (setq coding-system-for-read 'utf-8)
+  (setq coding-system-for-write 'utf-8)
 
-    ;; local variable safe
-    (setq enable-local-variables t)
-    (prefer-coding-system 'utf-8)
-    (setq coding-system-for-read 'utf-8)
-    (setq coding-system-for-write 'utf-8)
+  ;; 终端中文乱码
+  (set-terminal-coding-system 'utf-8)
+  (modify-coding-system-alist 'process "*" 'utf-8)
 
-    ;; 终端中文乱码
-    (set-terminal-coding-system 'utf-8)
-    (modify-coding-system-alist 'process "*" 'utf-8)
+  (defun change-shell-mode-coding ()
+    (progn
+      (set-terminal-coding-system 'gbk)
+      (set-keyboard-coding-system 'gbk)
+      (set-selection-coding-system 'gbk)
+      (set-buffer-file-coding-system 'gbk)
+      (set-file-name-coding-system 'gbk)
+      (modify-coding-system-alist 'process "*" 'gbk)
+      (set-buffer-process-coding-system 'gbk 'gbk)
+      (set-file-name-coding-system 'gbk)))
+  (when (eq system-type 'windows-nt)
+    (add-hook 'shell-mode-hook 'change-shell-mode-coding))
 
-    (defun change-shell-mode-coding ()
-      (progn
-	(set-terminal-coding-system 'gbk)
-	(set-keyboard-coding-system 'gbk)
-	(set-selection-coding-system 'gbk)
-	(set-buffer-file-coding-system 'gbk)
-	(set-file-name-coding-system 'gbk)
-	(modify-coding-system-alist 'process "*" 'gbk)
-	(set-buffer-process-coding-system 'gbk 'gbk)
-	(set-file-name-coding-system 'gbk)))
-    (add-hook 'shell-mode-hook 'change-shell-mode-coding)
+  (use-package exec-path-from-shell
+    :if (memq window-system '(mac ns))
+    :ensure t
+    :config
+    (exec-path-from-shell-initialize))
 
-    (use-package exec-path-from-shell
-      :if (memq window-system '(mac ns))
-      :ensure t
-      :config
-      (exec-path-from-shell-initialize))
+  (global-unset-key (kbd "C-z"))
 
-    (global-unset-key (kbd "C-z"))
+  (when (fboundp 'winner-mode)
+    (winner-mode)
+    (windmove-default-keybindings))
 
-    (defun last-buffer1 ()
-      (interactive)
-      (switch-to-buffer (other-buffer)))
+  (defun last-buffer1 ()
+    (interactive)
+    (switch-to-buffer (other-buffer)))
 
-    (define-key global-map (kbd "C-z l") 'last-buffer1)
+  (define-key global-map (kbd "C-z l") 'last-buffer1)
 #+END_SRC
 * theme
 #+BEGIN_SRC emacs-lisp
@@ -68,6 +74,11 @@
     :custom
     (show-paren-style 'paren-blinking))
 
+  ;;; https://www.emacswiki.org/emacs/UnicodeFonts
+  (use-package unicode-fonts
+    :ensure t
+    :config
+    (unicode-fonts-setup))
 
   (use-package doom-modeline
     :ensure t
@@ -79,6 +90,14 @@
   (use-package doom-themes :ensure t
     :config
     (load-theme 'doom-one t))
+#+END_SRC
+** emojify
+emoji 显示
+#+BEGIN_SRC emacs-lisp
+  (use-package emojify
+    :ensure t
+    :hook (after-init . global-emojify-mode))
+
 #+END_SRC
 * try
 #+BEGIN_SRC emacs-lisp
@@ -238,9 +257,70 @@
 #+END_SRC
 
 * chinese
+** 输入法设置
 #+BEGIN_SRC emacs-lisp
-  (when (eq system-type 'windows-nt)
-    (set-default-font "Sarasa Term TC"))
+  ;; rime
+  (use-package liberime
+					  ;:load-path "~/tmp/.emacs.d/liberime.so"
+    :load-path "liberime.so"
+    :if (eq system-type 'darwin)
+    :config
+    ;; 注意事项:
+    ;; 1. 文件路径需要用 `expand-file-name' 函数处理。
+    ;; 2. `librime-start' 的第一个参数说明 "rime 共享数据文件夹"
+    ;;     的位置，不同的平台其位置也各不相同，可以参考：
+    ;;     https://github.com/rime/home/wiki/RimeWithSchemata
+    (liberime-start
+     "/Library/Input Methods/Squirrel.app/Contents/SharedSupport"
+     (file-truename (concat emacs-root-dir "/pyim/rime/")))
+    (liberime-select-schema "double_pinyin_flypy")
+    (setq pyim-default-scheme 'rime)
+    (setq default-input-method "pyim")
+    (setq pyim-page-tooltip 'posframe))
+
+      ;;; https://github.com/tumashu/pyim#org37155c7
+  (use-package pyim :ensure t :demand t
+    :config
+    (setq default-input-method "pyim")
+    (setq pyim-page-tooltip 'posframe)
+    (setq pyim-default-scheme 'xiaohe-shuangpin))
+
+  (use-package pyim-basedict
+    :if (eq system-type 'windows-nt)
+    :config
+    (pyim-basedict-enable)
+    (setq default-input-method "pyim")
+    (setq pyim-page-tooltip 'posframe)
+
+    (setq pyim-default-scheme 'xiaohe-shuangpin)
+    (setq-default pyim-english-input-switch-functions
+		  '(pyim-probe-dynamic-english
+		    pyim-probe-isearch-mode
+		    pyim-probe-program-mode
+		    pyim-probe-org-structure-template))
+
+    (setq-default pyim-punctuation-half-width-functions
+		  '(pyim-probe-punctuation-line-beginning
+		    pyim-probe-punctuation-after-punctuation))
+    ;; 开启拼音搜索功能
+    (pyim-isearch-mode 1)
+
+    ;; 使用 popup-el 来绘制选词框, 如果用 emacs26, 建议设置
+    ;; 为 'posframe, 速度很快并且菜单不会变形，不过需要用户
+    ;; 手动安装 posframe 包。
+    ;;(setq pyim-page-tooltip 'popup)
+
+    ;; 选词框显示5个候选词
+    (setq pyim-page-length 5)
+
+    :bind
+    (("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
+     ("C-;" . pyim-delete-word-from-personal-buffer)))
+#+END_SRC
+** other
+#+BEGIN_SRC emacs-lisp
+					  ;(when (eq system-type 'windows-nt)
+					  ;(set-default-font "Sarasa Term TC"))
 
   ;; (use-package cnfonts
   ;;   :ensure t
@@ -260,36 +340,7 @@
     :ensure t
     :bind (("C-c y" . youdao-dictionary-search-at-point+)))
 
-  ;; rime
-  (use-package liberime
-					  ;:load-path "~/tmp/.emacs.d/liberime.so"
-    :load-path "liberime.so"
-    :if (eq system-type 'darwin)
-    :config
-    ;; 注意事项:
-    ;; 1. 文件路径需要用 `expand-file-name' 函数处理。
-    ;; 2. `librime-start' 的第一个参数说明 "rime 共享数据文件夹"
-    ;;     的位置，不同的平台其位置也各不相同，可以参考：
-    ;;     https://github.com/rime/home/wiki/RimeWithSchemata
-    (liberime-start
-     "/Library/Input Methods/Squirrel.app/Contents/SharedSupport"
-     (file-truename (concat emacs-root-dir "/pyim/rime/")))
-    (liberime-select-schema "double_pinyin_flypy")
-    (setq pyim-default-scheme 'rime))
 
-    ;;; https://github.com/tumashu/pyim#org37155c7
-  (use-package pyim :ensure t
-    ;;    :bind ("C-\\" . toggle-input-method)
-    :config
-    (setq default-input-method "pyim")
-    (setq pyim-page-tooltip 'posframe))
-
-  (use-package pyim-basedict
-    :ensure t
-    :if (eq system-type 'windows-nt)
-    :config
-    (pyim-basedict-enable)
-    (setq pyim-default-scheme 'xiaohe-shuangpin))
 
   (defun search-word-structure()
     (interactive)
@@ -397,10 +448,13 @@
 			 "~/org/wkb.org")))
 
     ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+
     (setq
      org-id-link-to-org-use-id 'create-if-interactive
      org-log-done 'time
-     org-bullets-bullet-list '("■" "◆" "▲" "▶")
+     ;; org-bullets-bullet-list '("■" "◆" "▲" "▶")
+     org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥")
      org-agenda-start-on-weekday 0
      org-todo-keywords '((sequence
 			  "TODO(t!)"
@@ -448,8 +502,11 @@
 #+END_SRC
 ** thing edit
 #+BEGIN_SRC emacs-lisp
-  (use-package thing-edit :bind ("M-S" . one-key-menu-thing-edit))
   (use-package one-key)
+  (use-package thing-edit
+    :config
+    (global-set-key (kbd "M-S")  'one-key-menu-thing-edit))
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Thing-Edit ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (defvar one-key-menu-thing-edit-alist nil
     "The `one-key' menu alist for THING-EDIT.")
@@ -509,10 +566,10 @@
   (setq ns-function-modifier 'hyper)
 
   (setq w32-pass-alt-to-system nil)
-  (setq w32-pass-lwindow-to-system t)
+  (setq w32-pass-lwindow-to-system nil)
   (setq w32-lwindow-modifier 'nil) ; Left Windows key
 
-  (setq w32-pass-rwindow-to-system t)
+  (setq w32-pass-rwindow-to-system nil)
   (setq w32-rwindow-modifier 'nil); Right Windows key
 
   ;; (setq w32-pass-apps-to-system nil)
@@ -530,7 +587,8 @@
 #+BEGIN_SRC emacs-lisp
   (use-package magit
     :commands magit
-    :ensure t)
+    :ensure t
+    :bind ("C-x g" . magit-status))
 
 
   (use-package gh
@@ -575,8 +633,9 @@
     :ensure t
     :bind ("C-=" . er/expand-region))
 
+  (use-package iedit :ensure t
+    :bind ("C-c m" . iedit-mode))
 
-  (use-package iedit :ensure t)
 
   ;; (use-package paredit
   ;;   :ensure t
@@ -620,7 +679,8 @@
     (undo-tree-auto-save-history t)
     (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
-  (use-package helpful
+  (use-package
+    helpful
     :ensure t
     :bind (("C-h f" . 'helpful-callable)
 	   ("C-h v" . 'helpful-variable)
@@ -893,4 +953,19 @@
       (create-word-card string (replace-regexp-in-string "\n" "<br>" result))))
 
   (defalias 'cc 'create-card-with-point-word)
+#+END_SRC
+* gnus
+#+BEGIN_SRC emacs-lisp
+  (setq send-mail-function (quote smtpmail-send-it))
+  (setq smtpmail-smtp-server "smtp.qq.com")
+  (setq smtpmail-smtp-service 25)
+  (setq user-full-name "kaikai")
+  (setq user-mail-address "986374081@qq.com")
+
+  (setq gnus-select-method '(nntp "news.somewhere.edu"))
+
+					  ;(autoload 'newsticker-start "newsticker" "Emacs Newsticker" t)
+					  ;(autoload 'newsticker-show-news "newsticker" "Emacs Newsticker" t)
+  (add-hook 'newsticker-mode-hook 'imenu-add-menubar-index)
+  (defalias 'rss 'newsticker-show-news)
 #+END_SRC
