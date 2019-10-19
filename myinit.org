@@ -92,7 +92,7 @@
     (load-theme 'doom-one t))
 #+END_SRC
 ** emojify
-emoji 显示
+   emoji 显示
 #+BEGIN_SRC emacs-lisp
   (use-package emojify
     :ensure t
@@ -475,7 +475,11 @@ emoji 显示
     (add-to-list 'org-capture-templates
 		 '("n" "Note/Data"
 		   entry (file+headline "~/org/inbox.org" "Note")
-		   "* %? \n\n  Source: %u \n\n %i\n\n ")))
+		   "* %? \n\n  Source: %u \n\n %i\n\n "))
+    ;;; org mobile
+    (setq org-mobile-directory "~/mobile")
+    (setq org-mobile-inbox-for-pull "~/mobile/index.org")
+    )
 #+END_SRC
 * lazy cat' toolset
 ** basic
