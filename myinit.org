@@ -3,17 +3,22 @@
 * interface tweaks
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-startup-message t)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
+
   (fset 'yes-or-no-p 'y-or-n-p)
   (global-set-key (kbd "<f5>") 'revert-buffer)
+
   (setq indo-enable-flex-matching t)
+
   (setq ido-everywhere t)
   (ido-mode 1)
+
   (setq column-number-mode 1)
+
   (blink-cursor-mode -1)
   (global-hl-line-mode)
+
   (setq ring-bell-function 'ignore)
+
   (setq mouse-yank-at-point t)
   (setq split-width-threshold nil)
 
@@ -23,26 +28,6 @@
 
   ;; local variable safe
   (setq enable-local-variables t)
-  (prefer-coding-system 'utf-8)
-  (setq coding-system-for-read 'utf-8)
-  (setq coding-system-for-write 'utf-8)
-
-  ;; 终端中文乱码
-  (set-terminal-coding-system 'utf-8)
-  (modify-coding-system-alist 'process "*" 'utf-8)
-
-  (defun change-shell-mode-coding ()
-    (progn
-      (set-terminal-coding-system 'gbk)
-      (set-keyboard-coding-system 'gbk)
-      (set-selection-coding-system 'gbk)
-      (set-buffer-file-coding-system 'gbk)
-      (set-file-name-coding-system 'gbk)
-      (modify-coding-system-alist 'process "*" 'gbk)
-      (set-buffer-process-coding-system 'gbk 'gbk)
-      (set-file-name-coding-system 'gbk)))
-  (when (eq system-type 'windows-nt)
-    (add-hook 'shell-mode-hook 'change-shell-mode-coding))
 
   (use-package exec-path-from-shell
     :if (memq window-system '(mac ns))
@@ -52,18 +37,21 @@
 
   (global-unset-key (kbd "C-z"))
 
-  (when (fboundp 'winner-mode)
-    (winner-mode)
-    (windmove-default-keybindings))
+  (winner-mode)
+  (windmove-default-keybindings)
 
   (defun last-buffer1 ()
     (interactive)
     (switch-to-buffer (other-buffer)))
 
-  (define-key global-map (kbd "C-z l") 'last-buffer1)
+  (define-key global-map (kbd "C-z r") 'last-buffer1)
 #+END_SRC
 * theme
 #+BEGIN_SRC emacs-lisp
+
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+
   (use-package rainbow-delimiters
     :ensure t
     :hook
@@ -82,8 +70,7 @@
 
   (use-package doom-modeline
     :ensure t
-    :config
-    (doom-modeline-mode 1))
+    :hook (after-init . doom-modeline-mode))
 
   ;; (use-package molokai-theme :ensure t)
 
@@ -106,6 +93,27 @@
   :commands try)
 #+END_SRC
 * enhance
+** evil
+ #+BEGIN_SRC emacs-lisp
+   (use-package evil
+     :ensure t
+     :hook (after-init . evil-mode)
+     :config
+     (use-package evil-nerd-commenter :ensure t)
+     (use-package evil-surround :ensure t)
+     (use-package evil-matchit :ensure t)
+     (use-package evil-visualstar :ensure t )
+     (use-package evil-escape :ensure t
+       :config
+       (setq evil-escape-key-sequence "hh")
+       (evil-escape-mode 1))
+     (use-package evil-leader :ensure t
+       :config (global-evil-leader-mode) (evil-leader/set-leader "<SPC>"))
+     (evil-set-initial-state 'snails-mode 'emacs)
+     (evil-set-initial-state 'help-mode 'emacs)
+     (evil-set-initial-state 'helpful-mode 'emacs)
+     (evil-set-initial-state 'snails-mode 'emacs))
+ #+END_SRC
 ** posframe
 #+BEGIN_SRC emacs-lisp
   (use-package posframe
@@ -257,6 +265,30 @@
 #+END_SRC
 
 * chinese
+** 编码
+#+BEGIN_SRC emacs-lisp
+  (prefer-coding-system 'utf-8)
+  (setq coding-system-for-read 'utf-8)
+  (setq coding-system-for-write 'utf-8)
+
+  ;; 终端中文乱码
+  (set-terminal-coding-system 'utf-8)
+  (modify-coding-system-alist 'process "*" 'utf-8)
+
+  (defun change-shell-mode-coding ()
+    (progn
+      (set-terminal-coding-system 'gbk)
+      (set-keyboard-coding-system 'gbk)
+      (set-selection-coding-system 'gbk)
+      (set-buffer-file-coding-system 'gbk)
+      (set-file-name-coding-system 'gbk)
+      (modify-coding-system-alist 'process "*" 'gbk)
+      (set-buffer-process-coding-system 'gbk 'gbk)
+      (set-file-name-coding-system 'gbk)))
+  (when (eq system-type 'windows-nt)
+    (add-hook 'shell-mode-hook 'change-shell-mode-coding))
+
+#+END_SRC
 ** 输入法设置
 #+BEGIN_SRC emacs-lisp
   ;; rime
@@ -356,8 +388,10 @@
   (use-package lispy
     :ensure t
     :init
-    (add-hook 'emacs-lisp-mode-hook 'lispy-mode 1)
-    )
+    (add-hook 'emacs-lisp-mode-hook 'lispy-mode 1))
+
+  (use-package evil :ensure t
+    :hook (lispy-mode . evil-lispy-mode))
 #+END_SRC
 * program
 ** aggressive 让代码一直保持缩进
@@ -482,7 +516,11 @@
     )
 #+END_SRC
 * lazy cat' toolset
-** basic
+** snails 快速搜索
+#+BEGIN_SRC emacs-lisp
+  (use-package snails :commands snails)
+#+END_SRC
+** others
 #+BEGIN_SRC emacs-lisp
   (use-package auto-save
     :config
@@ -491,8 +529,7 @@
     (setq auto-save-delete-trailing-whitespace t)
     (setq backup-directory-alist `(("." . "~/.emacs.d/saves"))))
 
-  (use-package snails
-    :bind (("C-z C-z" . snails)))
+
 
   (use-package google-translate
     :bind (("C-c t" . google-translate-at-point))
@@ -666,14 +703,9 @@
 #+END_SRC
 * tools
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package evil
-  ;;   :ensure t
-  ;;   :config
-  ;;   (evil-mode 1))
   (use-package google-this
     :ensure t
-    :config
-    (google-this-mode 1))
+    :commands google-this-search)
 
   (use-package undo-tree
     :ensure t
@@ -972,4 +1004,31 @@
 					  ;(autoload 'newsticker-show-news "newsticker" "Emacs Newsticker" t)
   (add-hook 'newsticker-mode-hook 'imenu-add-menubar-index)
   (defalias 'rss 'newsticker-show-news)
+#+END_SRC
+* keybindings
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load 'evil-leader
+    (evil-leader/set-key
+      "ff" 'counsel-find-file
+      "fr" 'snails
+      "fp" 'snails-search-point
+      "bb" 'ivy-switch-buffer)
+
+    (evil-leader/set-key
+      "gs" 'magit-status
+      "gg" 'google-this-search
+      "gt" 'google-translate-at-point)
+
+    (evil-leader/set-key
+      "wu" 'winner-undo
+      "wU" 'winner-redo
+      "wo" 'ace-window)
+
+    (evil-leader/set-key
+      "ss" 'avy-goto-char
+      "sn" 'yas-new-snippet
+      "sv" 'yas-visit-snippet-file)
+
+    (evil-leader/set-key
+      "t." 'cc))
 #+END_SRC
