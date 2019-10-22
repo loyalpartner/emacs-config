@@ -1,7 +1,7 @@
 #+STARTUP: overview
 #+PROPERTY: header-args :comments yes :results silent
 * interface tweaks
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (setq inhibit-startup-message t)
 
   (fset 'yes-or-no-p 'y-or-n-p)
@@ -45,9 +45,9 @@
     (switch-to-buffer (other-buffer)))
 
   (define-key global-map (kbd "C-z r") 'last-buffer1)
-#+END_SRC
+  #+END_SRC
 * theme
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
 
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
@@ -77,25 +77,26 @@
   (use-package doom-themes :ensure t
     :config
     (load-theme 'doom-one t))
-#+END_SRC
+  #+END_SRC
 ** emojify
    emoji 显示
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package emojify
     :ensure t
     :hook (after-init . global-emojify-mode))
 
-#+END_SRC
-* try
-#+BEGIN_SRC emacs-lisp
-(use-package try
-  :ensure t
-  :commands try)
-#+END_SRC
+   #+END_SRC
+
 * enhance
+** try
+   #+BEGIN_SRC emacs-lisp
+ (use-package try
+   :ensure t
+   :commands try)
+   #+END_SRC
 ** evil
    偶尔有时候需要 evil, hh进入normal模式。
- #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
    (use-package evil
      :ensure t
      ;; :hook (after-init . evil-mode)
@@ -114,21 +115,16 @@
      (evil-set-initial-state 'help-mode 'emacs)
      (evil-set-initial-state 'helpful-mode 'emacs)
      (evil-set-initial-state 'snails-mode 'emacs))
- #+END_SRC
-** posframe
-#+BEGIN_SRC emacs-lisp
-  (use-package posframe
-    :ensure t)
-#+END_SRC
+   #+END_SRC
 ** which key
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package which-key
     :ensure t
     :config
     (which-key-mode))
-#+END_SRC
+   #+END_SRC
 ** ivy/counsel/swiper
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package hydra :ensure t)
 
   (use-package counsel :ensure t)
@@ -162,10 +158,10 @@
       (setq ivy-display-style 'fancy)
       (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
       ))
-#+END_SRC
+   #+END_SRC
 
 ** window
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package ace-window
     :ensure t
     :defer t
@@ -180,16 +176,20 @@
     :ensure t
     :config
     (window-numbering-mode))
-#+END_SRC
+
+
+  (use-package posframe
+    :ensure t)
+   #+END_SRC
 ** avy
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
 (use-package avy
   :ensure t
   :bind ("C-c g" . avy-goto-char))
-#+END_SRC
+   #+END_SRC
 
 ** company-mode
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package company
     :ensure t
     :diminish ""
@@ -227,49 +227,9 @@
     :ensure t
     :config
     (company-posframe-mode 1))
-#+END_SRC
-* version control
-** git
- #+BEGIN_SRC emacs-lisp
-   (use-package magit
-     :ensure t
-     :commands
-     magit)
 
-   (use-package gh
-     :ensure t)
-
-   (use-package gist :ensure t
-     :commands
-     gist-list)
-
-   (use-package git-gutter
-     :ensure t
-     :hook
-     (prog-mode . git-gutter-mode))
-
-   (use-package browse-at-remote :ensure t
-     :commands browse-at-remote)
-
-   (use-package git-link :ensure
-     :commands git-link)
- #+END_SRC
-* COMMENT auto-completion
-#+BEGIN_SRC emacs-lisp
-  (use-package auto-complete
-    :ensure t
-    :config
-    (progn
-      (ac-config-default)
-      (add-to-list 'ac-modes 'org-mode)))
-#+END_SRC
-* lsp settings
-#+BEGIN_SRC emacs-lisp
   (use-package lsp-mode :ensure t
-    :commands lsp
-    :hook
-    ((js2-mode . lsp)))
-
+    :commands lsp)
 
   (use-package company-lsp
     :ensure t
@@ -278,381 +238,51 @@
     ;; (push 'company-lsp company-backends)
     (setq company-lsp-enable-recompletion t)
     (setq lsp-auto-configure nil))
-#+END_SRC
-* Reveal.js
-#+BEGIN_SRC emacs-lisp
-(use-package ox-reveal
-  :ensure ox-reveal)
+   #+END_SRC
+** edit config
+*** enhance
+    #+BEGIN_SRC emacs-lisp
 
-(setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
-(setq org-reveal-mathjax t)
+     (use-package expand-region
+     :ensure t
+     :bind ("C-=" . er/expand-region))
 
-(use-package htmlize
-  :ensure t)
-#+END_SRC
+   (use-package iedit :ensure t
+     :bind ("C-c m" . iedit-mode))
 
-* chinese
-** 编码
-#+BEGIN_SRC emacs-lisp
-  (prefer-coding-system 'utf-8)
-  (setq coding-system-for-read 'utf-8)
-  (setq coding-system-for-write 'utf-8)
+   ;; (use-package paredit
+   ;;   :ensure t
+   ;;   :hook ((emacs-lisp-mode . paredit-mode)
+   ;; 	 (ielm-mode . paredit-mode)
+   ;; 	 (lisp-mode . paredit-mode)
+   ;; 	))
 
-  ;; 终端中文乱码
-  (set-terminal-coding-system 'utf-8)
-  (modify-coding-system-alist 'process "*" 'utf-8)
+   ;; (use-package paredit-everywhere
+   ;;   :ensure t
+   ;;   :bind (:map )
+   ;;   :hook (prog-mode . paredit-everywhere-mode))
+    #+END_SRC
+*** snippet
+    #+BEGIN_SRC emacs-lisp
+   (use-package yasnippet
+     :ensure t
+     :config
+     (yas-global-mode 1))
 
-  (defun change-shell-mode-coding ()
-    (progn
-      (set-terminal-coding-system 'gbk)
-      (set-keyboard-coding-system 'gbk)
-      (set-selection-coding-system 'gbk)
-      (set-buffer-file-coding-system 'gbk)
-      (set-file-name-coding-system 'gbk)
-      (modify-coding-system-alist 'process "*" 'gbk)
-      (set-buffer-process-coding-system 'gbk 'gbk)
-      (set-file-name-coding-system 'gbk)))
-  (when (eq system-type 'windows-nt)
-    (add-hook 'shell-mode-hook 'change-shell-mode-coding))
-
-#+END_SRC
-** 输入法设置
-#+BEGIN_SRC emacs-lisp
-  ;; rime
-  (use-package liberime
-					  ;:load-path "~/tmp/.emacs.d/liberime.so"
-    :load-path "liberime.so"
-    :if (eq system-type 'darwin)
-    :config
-    ;; 注意事项:
-    ;; 1. 文件路径需要用 `expand-file-name' 函数处理。
-    ;; 2. `librime-start' 的第一个参数说明 "rime 共享数据文件夹"
-    ;;     的位置，不同的平台其位置也各不相同，可以参考：
-    ;;     https://github.com/rime/home/wiki/RimeWithSchemata
-    (liberime-start
-     "/Library/Input Methods/Squirrel.app/Contents/SharedSupport"
-     (file-truename (concat emacs-root-dir "/pyim/rime/")))
-    (liberime-select-schema "double_pinyin_flypy")
-    (setq pyim-default-scheme 'rime)
-    (setq default-input-method "pyim")
-    (setq pyim-page-tooltip 'posframe))
-
-      ;;; https://github.com/tumashu/pyim#org37155c7
-  (use-package pyim :ensure t :demand t
-    :config
-    (setq default-input-method "pyim")
-    (setq pyim-page-tooltip 'posframe)
-    (setq pyim-default-scheme 'xiaohe-shuangpin))
-
-  (use-package pyim-basedict
-    :if (eq system-type 'windows-nt)
-    :config
-    (pyim-basedict-enable)
-    (setq default-input-method "pyim")
-    (setq pyim-page-tooltip 'posframe)
-
-    (setq pyim-default-scheme 'xiaohe-shuangpin)
-    (setq-default pyim-english-input-switch-functions
-		  '(pyim-probe-dynamic-english
-		    pyim-probe-isearch-mode
-		    pyim-probe-program-mode
-		    pyim-probe-org-structure-template))
-
-    (setq-default pyim-punctuation-half-width-functions
-		  '(pyim-probe-punctuation-line-beginning
-		    pyim-probe-punctuation-after-punctuation))
-    ;; 开启拼音搜索功能
-    (pyim-isearch-mode 1)
-
-    ;; 使用 popup-el 来绘制选词框, 如果用 emacs26, 建议设置
-    ;; 为 'posframe, 速度很快并且菜单不会变形，不过需要用户
-    ;; 手动安装 posframe 包。
-    ;;(setq pyim-page-tooltip 'popup)
-
-    ;; 选词框显示5个候选词
-    (setq pyim-page-length 5)
-
-    :bind
-    (("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
-     ("C-;" . pyim-delete-word-from-personal-buffer)))
-#+END_SRC
-** other
-#+BEGIN_SRC emacs-lisp
-					  ;(when (eq system-type 'windows-nt)
-					  ;(set-default-font "Sarasa Term TC"))
-
-  ;; (use-package cnfonts
-  ;;   :ensure t
-  ;;   :config
-  ;;   (cnfonts-
-
-  (use-package pangu-spacing
-    :ensure t
-    :config (global-pangu-spacing-mode 1))
-
-  (use-package ace-pinyin
-    :ensure t
-    :config
-    (ace-pinyin-global-mode 1))
-
-  (use-package youdao-dictionary
-    :ensure t
-    :bind (("C-c y" . youdao-dictionary-search-at-point+)))
-
-
-
-  (defun search-word-structure()
-    (interactive)
-    (browse-url
-     (concat
-      "https://www.youdict.com/ciyuan/s/"
-      (thing-at-point 'word))))
-
-  (defalias 'sws 'search-word-structure)
-#+END_SRC
-* lispy
-#+BEGIN_SRC emacs-lisp
-  (use-package lispy
-    :ensure t
-    :init
-    (add-hook 'emacs-lisp-mode-hook 'lispy-mode 1))
-
-  ;; (use-package evil-lispy :ensure t
-  ;;   :hook (lispy-mode . evil-lispy-mode))
-#+END_SRC
-* program
-** aggressive 让代码一直保持缩进
-#+BEGIN_SRC emacs-lisp
-  (use-package aggressive-indent
-    :ensure t
-    :config
-    (aggressive-indent-global-mode))
-#+END_SRC
-** python
-#+BEGIN_SRC emacs-lisp
-  ;; (use-package lsp-python-ms :ensure t
-  ;;   :hook (python-mode . lsp)
-  ;;   :demand
-  ;;   :init
-  ;;   (setq lsp-python-ms-executable "~/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer.exe"))
-
-  (use-package company-anaconda
-    :ensure t
-    :hook (python-mode . anaconda-mode)
-    :config
-    )
-
-  (eval-after-load "company"
-   '(add-to-list 'company-backends '(company-anaconda :with company-capf company-yasnippet)))
-#+END_SRC
-
-** autohotkey
-#+BEGIN_SRC emacs-lisp
-  (use-package ahk-mode
-    :ensure t
-    :if (eq system-type 'windows-nt))
-
-#+END_SRC
-** javascript
-#+BEGIN_SRC emacs-lisp
-  (use-package js2-mode
-    :ensure t
-    :mode "\\.js\\'")
-
-  ;; (use-package company-tern
-  ;;   :ensure t
-  ;;   :hook (js2-mode . tern-mode))
-
-  ;; (eval-after-load "lsp"
-  ;;   (add-hook 'js2-mode-hook 'lsp))
-#+END_SRC
-
-* flycheck
-#+BEGIN_SRC emacs-lisp
-(use-package flycheck
-  :ensure t
-  :init
-  (global-flycheck-mode t))
-#+END_SRC
-* org
-#+BEGIN_SRC emacs-lisp
-
-  (with-eval-after-load 'org
-    (use-package org-protocol )
-
-
-    (use-package org-bullets
-      :ensure t
-      :init
-      (dolist (mode (list 'org-mode-hook 'org-journal-mode-hook))
-	(add-hook mode (lambda () (org-bullets-mode 1)))))
-
-
-    (use-package org-pomodoro :ensure t)
-
-    (use-package org-journal :ensure t
-      :custom
-      (org-journal-dir "~/org/journal/")
-      (org-journal-date-format "%A, %d %B %Y"))
-
-    (use-package org-agenda
-      :defer 10
-      :config
-      (setq
-       org-default-notes-file "~/org/inbox.org"
-       org-agenda-files (list
-			 "~/org/inbox.org"
-			 "~/org/word.org"
-			 "~/org/email.org"
-			 "~/org/tasks.org"
-			 "~/org/wtasks.org"
-			 "~/org/wkb.org")))
-
-    ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-
-
-    (setq
-     org-id-link-to-org-use-id 'create-if-interactive
-     org-log-done 'time
-     ;; org-bullets-bullet-list '("■" "◆" "▲" "▶")
-     org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥")
-     org-agenda-start-on-weekday 0
-     org-todo-keywords '((sequence
-			  "TODO(t!)"
-			  "NEXT(n!)"
-			  "STARTED(a!)"
-			  "WAIT(w@/!)"
-			  "OTHERS(o!)"
-			  "|"
-			  "DONE(d)"
-			  "CANCELLED(c)")))
-    ;; http://www.zmonster.me/2018/02/28/org-mode-capture.html
-    (setq org-capture-templates '())
-    (add-to-list 'org-capture-templates '("t" "Task"))
-    (add-to-list 'org-capture-templates
-		 '("N" "Note/Data"
-		   entry (file+headline "~/org/inbox.org" "Note")
-		   "* %:annotation \n\n  Source: %u \n\n %i\n\n "))
-    (add-to-list 'org-capture-templates
-		 '("n" "Note/Data"
-		   entry (file+headline "~/org/inbox.org" "Note")
-		   "* %? \n\n  Source: %u \n\n %i\n\n "))
-    ;;; org mobile
-    (setq org-mobile-directory "~/mobile")
-    (setq org-mobile-inbox-for-pull "~/mobile/index.org")
-    )
-#+END_SRC
-* lazy cat' toolset
-** snails 快速搜索
-#+BEGIN_SRC emacs-lisp
-  (use-package snails :commands snails)
-#+END_SRC
-** others
-#+BEGIN_SRC emacs-lisp
-  (use-package auto-save
-    :config
-    (auto-save-enable)
-    (setq auto-save-silent t)		; quietly save
-    (setq auto-save-delete-trailing-whitespace t)
-    (setq backup-directory-alist `(("." . "~/.emacs.d/saves"))))
-
-
-
-  (use-package google-translate
-    :bind (("C-c t" . google-translate-at-point))
-    :custom
-    (google-translate-default-target-language "zh-CN")
-    (google-translate-default-source-language "en"))
-
-  (use-package insert-translated-name
-    :bind (("C-z C-c" . insert-translated-name-insert)))
-
-#+END_SRC
-** thing edit
-#+BEGIN_SRC emacs-lisp
-  (use-package one-key)
-  (use-package thing-edit
-    :config
-    (global-set-key (kbd "M-S")  'one-key-menu-thing-edit))
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Thing-Edit ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (defvar one-key-menu-thing-edit-alist nil
-    "The `one-key' menu alist for THING-EDIT.")
-
-  (setq one-key-menu-thing-edit-alist
-	'(
-	  ;; Copy.
-	  (("w" . "Copy Word") . thing-copy-word)
-	  (("s" . "Copy Symbol") . thing-copy-symbol)
-	  (("m" . "Copy Email") . thing-copy-email)
-	  (("f" . "Copy Filename") . thing-copy-filename)
-	  (("u" . "Copy URL") . thing-copy-url)
-	  (("x" . "Copy Sexp") . thing-copy-sexp)
-	  (("g" . "Copy Page") . thing-copy-page)
-	  (("t" . "Copy Sentence") . thing-copy-sentence)
-	  (("o" . "Copy Whitespace") . thing-copy-whitespace)
-	  (("i" . "Copy List") . thing-copy-list)
-	  (("c" . "Copy Comment") . thing-copy-comment)
-	  (("h" . "Copy Function") . thing-copy-defun)
-	  (("p" . "Copy Parentheses") . thing-copy-parentheses)
-	  (("l" . "Copy Line") . thing-copy-line)
-	  (("a" . "Copy To Line Begin") . thing-copy-to-line-beginning)
-	  (("e" . "Copy To Line End") . thing-copy-to-line-end)
-	  ;; Cut.
-	  (("W" . "Cut Word") . thing-cut-word)
-	  (("S" . "Cut Symbol") . thing-cut-symbol)
-	  (("M" . "Cut Email") . thing-cut-email)
-	  (("F" . "Cut Filename") . thing-cut-filename)
-	  (("U" . "Cut URL") . thing-cut-url)
-	  (("X" . "Cut Sexp") . thing-cut-sexp)
-	  (("G" . "Cut Page") . thing-cut-page)
-	  (("T" . "Cut Sentence") . thing-cut-sentence)
-	  (("O" . "Cut Whitespace") . thing-cut-whitespace)
-	  (("I" . "Cut List") . thing-cut-list)
-	  (("C" . "Cut Comment") . thing-cut-comment)
-	  (("H" . "Cut Function") . thing-cut-defun)
-	  (("P" . "Cut Parentheses") . thing-cut-parentheses)
-	  (("L" . "Cut Line") . thing-cut-line)
-	  (("A" . "Cut To Line Begin") . thing-cut-to-line-beginning)
-	  (("E" . "Cut To Line End") . thing-cut-to-line-end)
-	  ))
-
-  (defun one-key-menu-thing-edit ()
-    "The `one-key' menu for THING-EDIT."
-    (interactive)
-    (one-key-menu "THING-EDIT" one-key-menu-thing-edit-alist t))
-#+END_SRC
-** lazy-search
-#+BEGIN_SRC emacs-lisp
-  (use-package lazy-search
-    :bind ("C-c s" . lazy-search))
-#+END_SRC
-* os settings
-#+BEGIN_SRC emacs-lisp
-  (setq mac-option-modifier 'super)
-  (setq mac-command-modifier 'meta)
-  (setq ns-function-modifier 'hyper)
-
-  (setq w32-pass-alt-to-system nil)
-  (setq w32-pass-lwindow-to-system nil)
-  (setq w32-lwindow-modifier 'nil) ; Left Windows key
-
-  (setq w32-pass-rwindow-to-system nil)
-  (setq w32-rwindow-modifier 'nil); Right Windows key
-
-  ;; (setq w32-pass-apps-to-system nil)
-  ;; (setq w32-apps-modifier 'hyper) ;
-#+END_SRC
-* atomic-chrome
-#+BEGIN_SRC emacs-lisp
+   (use-package yasnippet-snippets
+     :ensure t
+     :requires yasnippet)
+    #+END_SRC
+** atomic-chrome
+  #+BEGIN_SRC emacs-lisp
   (use-package atomic-chrome
     :ensure t
 
     :config
     (atomic-chrome-start-server))
-#+END_SRC
-* projectile
-#+BEGIN_SRC emacs-lisp
+  #+END_SRC
+** projectile
+  #+BEGIN_SRC emacs-lisp
   ;; https://docs.projectile.mx/en/latest/
   (use-package projectile
     :ensure t
@@ -668,50 +298,16 @@
     :ensure t
     :config
     (counsel-projectile-mode))
-#+END_SRC
-* server
-#+BEGIN_SRC emacs-lisp
+  #+END_SRC
+** server
+  #+BEGIN_SRC emacs-lisp
   (use-package server
     :config
     (unless (eq 't (server-running-p))
       (server-start)))
-#+END_SRC
-* edit config
-** enhance
-#+BEGIN_SRC emacs-lisp
-  (use-package expand-region
-    :ensure t
-    :bind ("C-=" . er/expand-region))
-
-  (use-package iedit :ensure t
-    :bind ("C-c m" . iedit-mode))
-
-
-  ;; (use-package paredit
-  ;;   :ensure t
-  ;;   :hook ((emacs-lisp-mode . paredit-mode)
-  ;; 	 (ielm-mode . paredit-mode)
-  ;; 	 (lisp-mode . paredit-mode)
-  ;; 	))
-
-  ;; (use-package paredit-everywhere
-  ;;   :ensure t
-  ;;   :bind (:map )
-  ;;   :hook (prog-mode . paredit-everywhere-mode))
-#+END_SRC
-** snippet
-#+BEGIN_SRC emacs-lisp
-  (use-package yasnippet
-    :ensure t
-    :config
-    (yas-global-mode 1))
-
-  (use-package yasnippet-snippets
-    :ensure t
-    :requires yasnippet)
-#+END_SRC
-* tools
-#+BEGIN_SRC emacs-lisp
+  #+END_SRC
+** tools
+  #+BEGIN_SRC emacs-lisp
   (use-package google-this
     :ensure t
     :commands google-this-search)
@@ -738,9 +334,9 @@
 
   ;; (use-package fuz :ensure t
   ;;   :if (not (eq system-type 'windows-nt)))
-#+END_SRC
+  #+END_SRC
 ** keyfreq
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package keyfreq
     :ensure t
     :hook (prog-mode . keyfreq-mode))
@@ -972,9 +568,412 @@
 	  yas-expand
 	  yas-next-field-or-maybe-expand))
 
-#+END_SRC
+   #+END_SRC
+* version control
+** git
+   #+BEGIN_SRC emacs-lisp
+   (use-package magit
+     :ensure t
+     :commands
+     magit)
+
+   (use-package gh
+     :ensure t)
+
+   (use-package gist :ensure t
+     :commands
+     gist-list)
+
+   (use-package git-gutter
+     :ensure t
+     :hook
+     (prog-mode . git-gutter-mode))
+
+   (use-package browse-at-remote :ensure t
+     :commands browse-at-remote)
+
+   (use-package git-link :ensure
+     :commands git-link)
+   #+END_SRC
+* COMMENT auto-completion
+  #+BEGIN_SRC emacs-lisp
+  (use-package auto-complete
+    :ensure t
+    :config
+    (progn
+      (ac-config-default)
+      (add-to-list 'ac-modes 'org-mode)))
+  #+END_SRC
+* chinese
+** 编码
+   #+BEGIN_SRC emacs-lisp
+  (prefer-coding-system 'utf-8)
+  (setq coding-system-for-read 'utf-8)
+  (setq coding-system-for-write 'utf-8)
+
+  ;; 终端中文乱码
+  (set-terminal-coding-system 'utf-8)
+  (modify-coding-system-alist 'process "*" 'utf-8)
+
+  (defun change-shell-mode-coding ()
+    (progn
+      (set-terminal-coding-system 'gbk)
+      (set-keyboard-coding-system 'gbk)
+      (set-selection-coding-system 'gbk)
+      (set-buffer-file-coding-system 'gbk)
+      (set-file-name-coding-system 'gbk)
+      (modify-coding-system-alist 'process "*" 'gbk)
+      (set-buffer-process-coding-system 'gbk 'gbk)
+      (set-file-name-coding-system 'gbk)))
+  (when (eq system-type 'windows-nt)
+    (add-hook 'shell-mode-hook 'change-shell-mode-coding))
+
+   #+END_SRC
+** 输入法设置
+   #+BEGIN_SRC emacs-lisp
+  ;; rime
+  (use-package liberime
+					  ;:load-path "~/tmp/.emacs.d/liberime.so"
+    :load-path "liberime.so"
+    :if (eq system-type 'darwin)
+    :config
+    ;; 注意事项:
+    ;; 1. 文件路径需要用 `expand-file-name' 函数处理。
+    ;; 2. `librime-start' 的第一个参数说明 "rime 共享数据文件夹"
+    ;;     的位置，不同的平台其位置也各不相同，可以参考：
+    ;;     https://github.com/rime/home/wiki/RimeWithSchemata
+    (liberime-start
+     "/Library/Input Methods/Squirrel.app/Contents/SharedSupport"
+     (file-truename (concat emacs-root-dir "/pyim/rime/")))
+    (liberime-select-schema "double_pinyin_flypy")
+    (setq pyim-default-scheme 'rime)
+    (setq default-input-method "pyim")
+    (setq pyim-page-tooltip 'posframe))
+
+      ;;; https://github.com/tumashu/pyim#org37155c7
+  (use-package pyim :ensure t :demand t
+    :config
+    (setq default-input-method "pyim")
+    (setq pyim-page-tooltip 'posframe)
+    (setq pyim-default-scheme 'xiaohe-shuangpin))
+
+  (use-package pyim-basedict
+    :if (eq system-type 'windows-nt)
+    :config
+    (pyim-basedict-enable)
+    (setq default-input-method "pyim")
+    (setq pyim-page-tooltip 'posframe)
+
+    (setq pyim-default-scheme 'xiaohe-shuangpin)
+    (setq-default pyim-english-input-switch-functions
+		  '(pyim-probe-dynamic-english
+		    pyim-probe-isearch-mode
+		    pyim-probe-program-mode
+		    pyim-probe-org-structure-template))
+
+    (setq-default pyim-punctuation-half-width-functions
+		  '(pyim-probe-punctuation-line-beginning
+		    pyim-probe-punctuation-after-punctuation))
+    ;; 开启拼音搜索功能
+    (pyim-isearch-mode 1)
+
+    ;; 使用 popup-el 来绘制选词框, 如果用 emacs26, 建议设置
+    ;; 为 'posframe, 速度很快并且菜单不会变形，不过需要用户
+    ;; 手动安装 posframe 包。
+    ;;(setq pyim-page-tooltip 'popup)
+
+    ;; 选词框显示5个候选词
+    (setq pyim-page-length 5)
+
+    :bind
+    (("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
+     ("C-;" . pyim-delete-word-from-personal-buffer)))
+   #+END_SRC
+** other
+   #+BEGIN_SRC emacs-lisp
+					  ;(when (eq system-type 'windows-nt)
+					  ;(set-default-font "Sarasa Term TC"))
+
+  ;; (use-package cnfonts
+  ;;   :ensure t
+  ;;   :config
+  ;;   (cnfonts-
+
+  (use-package pangu-spacing
+    :ensure t
+    :config (global-pangu-spacing-mode 1))
+
+  (use-package ace-pinyin
+    :ensure t
+    :config
+    (ace-pinyin-global-mode 1))
+
+  (use-package youdao-dictionary
+    :ensure t
+    :bind (("C-c y" . youdao-dictionary-search-at-point+)))
+
+
+
+  (defun search-word-structure()
+    (interactive)
+    (browse-url
+     (concat
+      "https://www.youdict.com/ciyuan/s/"
+      (thing-at-point 'word))))
+
+  (defalias 'sws 'search-word-structure)
+   #+END_SRC
+* program
+** flycheck
+   #+BEGIN_SRC emacs-lisp
+(use-package flycheck
+  :ensure t
+  :init
+  (global-flycheck-mode t))
+   #+END_SRC
+** lispy
+   #+BEGIN_SRC emacs-lisp
+  (use-package lispy
+    :ensure t
+    :init
+    (add-hook 'emacs-lisp-mode-hook 'lispy-mode 1))
+
+  ;; (use-package evil-lispy :ensure t
+  ;;   :hook (lispy-mode . evil-lispy-mode))
+   #+END_SRC
+** aggressive 让代码一直保持缩进
+   #+BEGIN_SRC emacs-lisp
+  (use-package aggressive-indent
+    :ensure t
+    :config
+    (aggressive-indent-global-mode))
+   #+END_SRC
+** python
+   #+BEGIN_SRC emacs-lisp
+  ;; (use-package lsp-python-ms :ensure t
+  ;;   :hook (python-mode . lsp)
+  ;;   :demand
+  ;;   :init
+  ;;   (setq lsp-python-ms-executable "~/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer.exe"))
+
+  (use-package company-anaconda
+    :ensure t
+    :hook (python-mode . anaconda-mode)
+    :config
+    )
+
+  (eval-after-load "company"
+   '(add-to-list 'company-backends '(company-anaconda :with company-capf company-yasnippet)))
+   #+END_SRC
+
+** autohotkey
+   #+BEGIN_SRC emacs-lisp
+  (use-package ahk-mode
+    :ensure t
+    :if (eq system-type 'windows-nt))
+
+   #+END_SRC
+** javascript
+   #+BEGIN_SRC emacs-lisp
+  (use-package js2-mode
+    :ensure t
+    :mode "\\.js\\'")
+
+  ;; (use-package company-tern
+  ;;   :ensure t
+  ;;   :hook (js2-mode . tern-mode))
+
+  ;; (eval-after-load "lsp"
+  ;;   (add-hook 'js2-mode-hook 'lsp))
+   #+END_SRC
+
+* org
+  #+BEGIN_SRC emacs-lisp
+
+  (with-eval-after-load 'org
+    (use-package org-protocol )
+
+
+    (use-package org-bullets
+      :ensure t
+      :init
+      (dolist (mode (list 'org-mode-hook 'org-journal-mode-hook))
+	(add-hook mode (lambda () (org-bullets-mode 1)))))
+
+
+    (use-package org-pomodoro :ensure t)
+
+    (use-package org-journal :ensure t
+      :custom
+      (org-journal-dir "~/org/journal/")
+      (org-journal-date-format "%A, %d %B %Y"))
+
+    (use-package org-agenda
+      :defer 10
+      :config
+      (setq
+       org-default-notes-file "~/org/inbox.org"
+       org-agenda-files (list
+			 "~/org/inbox.org"
+			 "~/org/word.org"
+			 "~/org/email.org"
+			 "~/org/tasks.org"
+			 "~/org/wtasks.org"
+			 "~/org/wkb.org")))
+
+    ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+
+    (setq
+     org-id-link-to-org-use-id 'create-if-interactive
+     org-log-done 'time
+     ;; org-bullets-bullet-list '("■" "◆" "▲" "▶")
+     org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥")
+     org-agenda-start-on-weekday 0
+     org-todo-keywords '((sequence
+			  "TODO(t!)"
+			  "NEXT(n!)"
+			  "STARTED(a!)"
+			  "WAIT(w@/!)"
+			  "OTHERS(o!)"
+			  "|"
+			  "DONE(d)"
+			  "CANCELLED(c)")))
+    ;; http://www.zmonster.me/2018/02/28/org-mode-capture.html
+    (setq org-capture-templates '())
+    (add-to-list 'org-capture-templates '("t" "Task"))
+    (add-to-list 'org-capture-templates
+		 '("N" "Note/Data"
+		   entry (file+headline "~/org/inbox.org" "Note")
+		   "* %:annotation \n\n  Source: %u \n\n %i\n\n "))
+    (add-to-list 'org-capture-templates
+		 '("n" "Note/Data"
+		   entry (file+headline "~/org/inbox.org" "Note")
+		   "* %? \n\n  Source: %u \n\n %i\n\n "))
+    ;;; org mobile
+    (setq org-mobile-directory "~/mobile")
+    (setq org-mobile-inbox-for-pull "~/mobile/index.org")
+    )
+  #+END_SRC
+* lazy cat' toolset
+** snails 快速搜索
+   #+BEGIN_SRC emacs-lisp
+  (use-package snails :commands snails)
+   #+END_SRC
+** others
+   #+BEGIN_SRC emacs-lisp
+  (use-package auto-save
+    :config
+    (auto-save-enable)
+    (setq auto-save-silent t)		; quietly save
+    (setq auto-save-delete-trailing-whitespace t)
+    (setq backup-directory-alist `(("." . "~/.emacs.d/saves"))))
+
+
+
+  (use-package google-translate
+    :bind (("C-c t" . google-translate-at-point))
+    :custom
+    (google-translate-default-target-language "zh-CN")
+    (google-translate-default-source-language "en"))
+
+  (use-package insert-translated-name
+    :bind (("C-z C-c" . insert-translated-name-insert)))
+
+   #+END_SRC
+** thing edit
+   #+BEGIN_SRC emacs-lisp
+  (use-package one-key)
+  (use-package thing-edit
+    :config
+    (global-set-key (kbd "M-S")  'one-key-menu-thing-edit))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Thing-Edit ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (defvar one-key-menu-thing-edit-alist nil
+    "The `one-key' menu alist for THING-EDIT.")
+
+  (setq one-key-menu-thing-edit-alist
+	'(
+	  ;; Copy.
+	  (("w" . "Copy Word") . thing-copy-word)
+	  (("s" . "Copy Symbol") . thing-copy-symbol)
+	  (("m" . "Copy Email") . thing-copy-email)
+	  (("f" . "Copy Filename") . thing-copy-filename)
+	  (("u" . "Copy URL") . thing-copy-url)
+	  (("x" . "Copy Sexp") . thing-copy-sexp)
+	  (("g" . "Copy Page") . thing-copy-page)
+	  (("t" . "Copy Sentence") . thing-copy-sentence)
+	  (("o" . "Copy Whitespace") . thing-copy-whitespace)
+	  (("i" . "Copy List") . thing-copy-list)
+	  (("c" . "Copy Comment") . thing-copy-comment)
+	  (("h" . "Copy Function") . thing-copy-defun)
+	  (("p" . "Copy Parentheses") . thing-copy-parentheses)
+	  (("l" . "Copy Line") . thing-copy-line)
+	  (("a" . "Copy To Line Begin") . thing-copy-to-line-beginning)
+	  (("e" . "Copy To Line End") . thing-copy-to-line-end)
+	  ;; Cut.
+	  (("W" . "Cut Word") . thing-cut-word)
+	  (("S" . "Cut Symbol") . thing-cut-symbol)
+	  (("M" . "Cut Email") . thing-cut-email)
+	  (("F" . "Cut Filename") . thing-cut-filename)
+	  (("U" . "Cut URL") . thing-cut-url)
+	  (("X" . "Cut Sexp") . thing-cut-sexp)
+	  (("G" . "Cut Page") . thing-cut-page)
+	  (("T" . "Cut Sentence") . thing-cut-sentence)
+	  (("O" . "Cut Whitespace") . thing-cut-whitespace)
+	  (("I" . "Cut List") . thing-cut-list)
+	  (("C" . "Cut Comment") . thing-cut-comment)
+	  (("H" . "Cut Function") . thing-cut-defun)
+	  (("P" . "Cut Parentheses") . thing-cut-parentheses)
+	  (("L" . "Cut Line") . thing-cut-line)
+	  (("A" . "Cut To Line Begin") . thing-cut-to-line-beginning)
+	  (("E" . "Cut To Line End") . thing-cut-to-line-end)
+	  ))
+
+  (defun one-key-menu-thing-edit ()
+    "The `one-key' menu for THING-EDIT."
+    (interactive)
+    (one-key-menu "THING-EDIT" one-key-menu-thing-edit-alist t))
+   #+END_SRC
+** lazy-search
+   #+BEGIN_SRC emacs-lisp
+  (use-package lazy-search
+    :bind ("C-c s" . lazy-search))
+   #+END_SRC
+* os settings
+  #+BEGIN_SRC emacs-lisp
+  (setq mac-option-modifier 'super)
+  (setq mac-command-modifier 'meta)
+  (setq ns-function-modifier 'hyper)
+
+  (setq w32-pass-alt-to-system nil)
+  (setq w32-pass-lwindow-to-system nil)
+  (setq w32-lwindow-modifier 'nil) ; Left Windows key
+
+  (setq w32-pass-rwindow-to-system nil)
+  (setq w32-rwindow-modifier 'nil); Right Windows key
+
+  ;; (setq w32-pass-apps-to-system nil)
+  ;; (setq w32-apps-modifier 'hyper) ;
+  #+END_SRC
+* application
+** gnus
+  #+BEGIN_SRC emacs-lisp
+  (setq send-mail-function (quote smtpmail-send-it))
+  (setq smtpmail-smtp-server "smtp.qq.com")
+  (setq smtpmail-smtp-service 25)
+  (setq user-full-name "kaikai")
+  (setq user-mail-address "986374081@qq.com")
+
+  (setq gnus-select-method '(nntp "news.somewhere.edu"))
+
+					  ;(autoload 'newsticker-start "newsticker" "Emacs Newsticker" t)
+					  ;(autoload 'newsticker-show-news "newsticker" "Emacs Newsticker" t)
+  (add-hook 'newsticker-mode-hook 'imenu-add-menubar-index)
+  (defalias 'rss 'newsticker-show-news)
+  #+END_SRC
 ** anki
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package anki-editor
     :ensure t
     :defer 5)
@@ -998,24 +997,9 @@
       (create-word-card string (replace-regexp-in-string "\n" "<br>" result))))
 
   (defalias 'cc 'create-card-with-point-word)
-#+END_SRC
-* gnus
-#+BEGIN_SRC emacs-lisp
-  (setq send-mail-function (quote smtpmail-send-it))
-  (setq smtpmail-smtp-server "smtp.qq.com")
-  (setq smtpmail-smtp-service 25)
-  (setq user-full-name "kaikai")
-  (setq user-mail-address "986374081@qq.com")
-
-  (setq gnus-select-method '(nntp "news.somewhere.edu"))
-
-					  ;(autoload 'newsticker-start "newsticker" "Emacs Newsticker" t)
-					  ;(autoload 'newsticker-show-news "newsticker" "Emacs Newsticker" t)
-  (add-hook 'newsticker-mode-hook 'imenu-add-menubar-index)
-  (defalias 'rss 'newsticker-show-news)
-#+END_SRC
+   #+END_SRC
 * keybindings
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (with-eval-after-load 'evil-leader
     (evil-leader/set-key
       "<space>" 'counsel-M-x)
@@ -1038,20 +1022,20 @@
       "wu" 'winner-undo
       "wU" 'winner-redo
       "wo" 'delete-other-windows
-      "ww" 'ace-window
+      "ww" 'ace-window)
 
-      (evil-leader/set-key
-	"ci" 'evilnc-comment-or-uncomment-lines
-	"cl" 'evilnc-quick-comment-or-uncomment-to-the-line
-	"cc" 'evilnc-copy-and-comment-lines
-	"cp" 'evilnc-comment-or-uncomment-paragraphs
-	"cr" 'comment-or-uncomment-region
-	"cv" 'evilnc-toggle-invert-comment-line-by-line
-	"."  'evilnc-copy-and-comment-operator
-	"\\" 'evilnc-comment-operator	; if you prefer backslash key)
+    (evil-leader/set-key
+      "ci" 'evilnc-comment-or-uncomment-lines
+      "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
+      "cc" 'evilnc-copy-and-comment-lines
+      "cp" 'evilnc-comment-or-uncomment-paragraphs
+      "cr" 'comment-or-uncomment-region
+      "cv" 'evilnc-toggle-invert-comment-line-by-line
+      "." 'evilnc-copy-and-comment-operator
+      "\\" 'evilnc-comment-operator)
 
-	(evil-leader/set-key
-	  "ss" 'avy-goto-char
-	  "sn" 'yas-new-snippet
-	  "sv" 'yas-visit-snippet-file))))
-#+END_SRC
+    (evil-leader/set-key
+      "ss" 'avy-goto-char
+      "sn" 'yas-new-snippet
+      "sv" 'yas-visit-snippet-file))
+  #+END_SRC
