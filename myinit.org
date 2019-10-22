@@ -51,6 +51,7 @@
 
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
+  (size-indication-mode t)
 
   (use-package rainbow-delimiters
     :ensure t
@@ -95,11 +96,10 @@
    :commands try)
    #+END_SRC
 ** evil
-   偶尔有时候需要 evil, hh进入normal模式。
    #+BEGIN_SRC emacs-lisp
    (use-package evil
      :ensure t
-     ;; :hook (after-init . evil-mode)
+     :hook (after-init . evil-mode)
      :config
      (use-package evil-nerd-commenter :ensure t)
      (use-package evil-surround :ensure t)
@@ -998,44 +998,64 @@
 
   (defalias 'cc 'create-card-with-point-word)
    #+END_SRC
+** pomodoro
+#+BEGIN_SRC emacs-lisp
+  (setq pomodoro-time 25)
+  (defun pomodoro ()
+    (interactive)
+    (message "start.")
+    (run-at-time (* pomodoro-time 60) nil (lambda ()
+					    (message "Time's up")
+					    (switch-to-buffer "*Messages*")
+					    (pomodoro-rest))))
+  (defun pomodoro-rest ()
+    (interactive)
+    (run-at-time (* 5 60) nil
+		 (lambda ()
+		   (switch-to-buffer (other-buffer))))
+#+END_SRC
 * keybindings
   #+BEGIN_SRC emacs-lisp
-  (with-eval-after-load 'evil-leader
-    (evil-leader/set-key
-      "<space>" 'counsel-M-x)
+    (with-eval-after-load 'evil-leader
+      (evil-leader/set-key
+	"<SPC>" 'counsel-M-x)
 
-    (evil-leader/set-key
-      "ff" 'counsel-find-file
-      "fr" 'counsel-recentf
-      "fs" 'snails
-      "fp" 'snails-search-point
-      "bb" 'ivy-switch-buffer)
+      (evil-leader/set-key
+	"ff" 'counsel-find-file
+	"fr" 'counsel-recentf
+	"fs" 'snails
+	"fp" 'snails-search-point
+	"bb" 'ivy-switch-buffer)
 
-    (evil-leader/set-key
-      "gs" 'magit-status
-      "gg" 'google-this-search
-      "gt" 'google-translate-at-point
-      "gb" 'browse-at-remote
-      "gl" 'git-link)
+      (evil-leader/set-key
+	"gs" 'magit-status
+	"gg" 'google-this-search
+	"gt" 'google-translate-at-point
+	"gb" 'browse-at-remote
+	"gl" 'git-link)
 
-    (evil-leader/set-key
-      "wu" 'winner-undo
-      "wU" 'winner-redo
-      "wo" 'delete-other-windows
-      "ww" 'ace-window)
+      (evil-leader/set-key
+	"wu" 'winner-undo
+	"wU" 'winner-redo
+	"wo" 'delete-other-windows
+	"ww" 'ace-window)
 
-    (evil-leader/set-key
-      "ci" 'evilnc-comment-or-uncomment-lines
-      "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
-      "cc" 'evilnc-copy-and-comment-lines
-      "cp" 'evilnc-comment-or-uncomment-paragraphs
-      "cr" 'comment-or-uncomment-region
-      "cv" 'evilnc-toggle-invert-comment-line-by-line
-      "." 'evilnc-copy-and-comment-operator
-      "\\" 'evilnc-comment-operator)
+      (evil-leader/set-key
+	"ci" 'evilnc-comment-or-uncomment-lines
+	"cl" 'evilnc-quick-comment-or-uncomment-to-the-line
+	"cc" 'evilnc-copy-and-comment-lines
+	"cp" 'evilnc-comment-or-uncomment-paragraphs
+	"cr" 'comment-or-uncomment-region
+	"cv" 'evilnc-toggle-invert-comment-line-by-line
+	"." 'evilnc-copy-and-comment-operator
+	"\\" 'evilnc-comment-operator)
 
-    (evil-leader/set-key
-      "ss" 'avy-goto-char
-      "sn" 'yas-new-snippet
-      "sv" 'yas-visit-snippet-file))
+      (evil-leader/set-key
+	"an" 'newsticker-show-news
+	"ap" 'pomodoro)
+
+      (evil-leader/set-key
+	"ss" 'avy-goto-char
+	"sn" 'yas-new-snippet
+	"sv" 'yas-visit-snippet-file))
   #+END_SRC
