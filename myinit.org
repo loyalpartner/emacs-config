@@ -631,63 +631,62 @@
    #+END_SRC
 ** 输入法设置
    #+BEGIN_SRC emacs-lisp
-  ;; rime
-  (use-package liberime
-					  ;:load-path "~/tmp/.emacs.d/liberime.so"
-    :load-path "liberime.so"
-    :if (eq system-type 'darwin)
-    :config
-    ;; 注意事项:
-    ;; 1. 文件路径需要用 `expand-file-name' 函数处理。
-    ;; 2. `librime-start' 的第一个参数说明 "rime 共享数据文件夹"
-    ;;     的位置，不同的平台其位置也各不相同，可以参考：
-    ;;     https://github.com/rime/home/wiki/RimeWithSchemata
-    (liberime-start
-     "/Library/Input Methods/Squirrel.app/Contents/SharedSupport"
-     (file-truename (concat emacs-root-dir "/pyim/rime/")))
-    (liberime-select-schema "double_pinyin_flypy")
-    (setq pyim-default-scheme 'rime)
-    (setq default-input-method "pyim")
-    (setq pyim-page-tooltip 'posframe))
+     ;; rime
+     (use-package liberime
+					     ;:load-path "~/tmp/.emacs.d/liberime.so"
+       :load-path "liberime.so"
+       :if (eq system-type 'darwin)
+       :config
+       ;; 注意事项:
+       ;; 1. 文件路径需要用 `expand-file-name' 函数处理。
+       ;; 2. `librime-start' 的第一个参数说明 "rime 共享数据文件夹"
+       ;;     的位置，不同的平台其位置也各不相同，可以参考：
+       ;;     https://github.com/rime/home/wiki/RimeWithSchemata
+       (liberime-start
+	"/Library/Input Methods/Squirrel.app/Contents/SharedSupport"
+	(file-truename (concat emacs-root-dir "/pyim/rime/")))
+       (liberime-select-schema "double_pinyin_flypy")
+       (setq pyim-default-scheme 'rime)
+       (setq default-input-method "pyim")
+       (setq pyim-page-tooltip 'posframe))
 
-      ;;; https://github.com/tumashu/pyim#org37155c7
-  (use-package pyim :ensure t :demand t
-    :config
-    (setq default-input-method "pyim")
-    (setq pyim-page-tooltip 'posframe)
-    (setq pyim-default-scheme 'xiaohe-shuangpin))
+	 ;;; https://github.com/tumashu/pyim#org37155c7
+     (use-package pyim :ensure t :demand t
+       :config
+       (setq default-input-method "pyim")
+       (setq pyim-page-tooltip 'posframe))
 
-  (use-package pyim-basedict
-    :if (eq system-type 'windows-nt)
-    :config
-    (pyim-basedict-enable)
-    (setq default-input-method "pyim")
-    (setq pyim-page-tooltip 'posframe)
+       (use-package pyim-basedict
+	 :if (eq system-type 'windows-nt)
+	 :config
+	 (pyim-basedict-enable)
+	 (setq default-input-method "pyim")
+	 (setq pyim-page-tooltip 'posframe)
 
-    (setq pyim-default-scheme 'xiaohe-shuangpin)
-    (setq-default pyim-english-input-switch-functions
-		  '(pyim-probe-dynamic-english
-		    pyim-probe-isearch-mode
-		    pyim-probe-program-mode
-		    pyim-probe-org-structure-template))
+	 (setq pyim-default-scheme 'xiaohe-shuangpin)
+	 (setq-default pyim-english-input-switch-functions
+		       '(pyim-probe-dynamic-english
+			 pyim-probe-isearch-mode
+			 pyim-probe-program-mode
+			 pyim-probe-org-structure-template))
 
-    (setq-default pyim-punctuation-half-width-functions
-		  '(pyim-probe-punctuation-line-beginning
-		    pyim-probe-punctuation-after-punctuation))
-    ;; 开启拼音搜索功能
-    (pyim-isearch-mode 1)
+	 (setq-default pyim-punctuation-half-width-functions
+		       '(pyim-probe-punctuation-line-beginning
+			 pyim-probe-punctuation-after-punctuation))
+	 ;; 开启拼音搜索功能
+	 (pyim-isearch-mode 1)
 
-    ;; 使用 popup-el 来绘制选词框, 如果用 emacs26, 建议设置
-    ;; 为 'posframe, 速度很快并且菜单不会变形，不过需要用户
-    ;; 手动安装 posframe 包。
-    ;;(setq pyim-page-tooltip 'popup)
+	 ;; 使用 popup-el 来绘制选词框, 如果用 emacs26, 建议设置
+	 ;; 为 'posframe, 速度很快并且菜单不会变形，不过需要用户
+	 ;; 手动安装 posframe 包。
+	 ;;(setq pyim-page-tooltip 'popup)
 
-    ;; 选词框显示5个候选词
-    (setq pyim-page-length 5)
+	 ;; 选词框显示5个候选词
+	 (setq pyim-page-length 5)
 
-    :bind
-    (("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
-     ("C-;" . pyim-delete-word-from-personal-buffer)))
+	 :bind
+	 (("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
+	  ("C-;" . pyim-delete-word-from-personal-buffer)))
    #+END_SRC
 ** other
    #+BEGIN_SRC emacs-lisp
