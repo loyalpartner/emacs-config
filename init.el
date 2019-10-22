@@ -6,8 +6,13 @@
 (setq package-enable-at-startup nil)
 (setq package-archives '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
  			 ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
-(package-initialize)
 
+(setq custom-file "~/.emacs.d/custom.el")
+
+(when (file-exists-p custom-file)
+  (load custom-file))
+
+(package-initialize)
 
 ;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package)
@@ -20,8 +25,9 @@
     (add-to-list 'load-path dir)
     (normal-top-level-add-subdirs-to-load-path)))
 
-(defconst emacs-root-dir "~/emacs-config")
-(add-subdirs-to-load-path "~/emacs-config/local")
+(defconst emacs-root-dir "~/.emacs.d")
+(add-subdirs-to-load-path "~/.emacs.d/local")
+
 (org-babel-load-file (expand-file-name
 		      (concat
 		       emacs-root-dir "/myinit.org")))

@@ -94,21 +94,22 @@
 #+END_SRC
 * enhance
 ** evil
+   偶尔有时候需要 evil, hh进入normal模式。
  #+BEGIN_SRC emacs-lisp
    (use-package evil
      :ensure t
-     :hook (after-init . evil-mode)
+     ;; :hook (after-init . evil-mode)
      :config
      (use-package evil-nerd-commenter :ensure t)
      (use-package evil-surround :ensure t)
      (use-package evil-matchit :ensure t)
-     (use-package evil-visualstar :ensure t )
-     (use-package evil-escape :ensure t
-       :config
-       (setq evil-escape-key-sequence "hh")
-       (evil-escape-mode 1))
+     (use-package evil-visualstar :ensure t)
      (use-package evil-leader :ensure t
        :config (global-evil-leader-mode) (evil-leader/set-leader "<SPC>"))
+     (use-package evil-escape :ensure t
+       :config (evil-escape-mode 1) (setq evil-escape-key-sequence "hh" evil-escape-delay 0.3))
+     (setq evil-insert-state-map nil)
+     (setq evil-normal-state-modes nil)
      (evil-set-initial-state 'snails-mode 'emacs)
      (evil-set-initial-state 'help-mode 'emacs)
      (evil-set-initial-state 'helpful-mode 'emacs)
@@ -227,6 +228,32 @@
     :config
     (company-posframe-mode 1))
 #+END_SRC
+* version control
+** git
+ #+BEGIN_SRC emacs-lisp
+   (use-package magit
+     :ensure t
+     :commands
+     magit)
+
+   (use-package gh
+     :ensure t)
+
+   (use-package gist :ensure t
+     :commands
+     gist-list)
+
+   (use-package git-gutter
+     :ensure t
+     :hook
+     (prog-mode . git-gutter-mode))
+
+   (use-package browse-at-remote :ensure t
+     :commands browse-at-remote)
+
+   (use-package git-link :ensure
+     :commands git-link)
+ #+END_SRC
 * COMMENT auto-completion
 #+BEGIN_SRC emacs-lisp
   (use-package auto-complete
@@ -390,8 +417,8 @@
     :init
     (add-hook 'emacs-lisp-mode-hook 'lispy-mode 1))
 
-  (use-package evil :ensure t
-    :hook (lispy-mode . evil-lispy-mode))
+  ;; (use-package evil-lispy :ensure t
+  ;;   :hook (lispy-mode . evil-lispy-mode))
 #+END_SRC
 * program
 ** aggressive 让代码一直保持缩进
@@ -623,24 +650,6 @@
 
     :config
     (atomic-chrome-start-server))
-#+END_SRC
-* git
-#+BEGIN_SRC emacs-lisp
-  (use-package magit
-    :commands magit
-    :ensure t
-    :bind ("C-x g" . magit-status))
-
-
-  (use-package gh
-    :ensure t)
-
-  (use-package git-gutter
-    :ensure t
-    :hook (prog-mode . git-gutter-mode))
-
-  (use-package gist :ensure t
-    :commands gist-list)
 #+END_SRC
 * projectile
 #+BEGIN_SRC emacs-lisp
@@ -1009,26 +1018,40 @@
 #+BEGIN_SRC emacs-lisp
   (with-eval-after-load 'evil-leader
     (evil-leader/set-key
+      "<space>" 'counsel-M-x)
+
+    (evil-leader/set-key
       "ff" 'counsel-find-file
-      "fr" 'snails
+      "fr" 'counsel-recentf
+      "fs" 'snails
       "fp" 'snails-search-point
       "bb" 'ivy-switch-buffer)
 
     (evil-leader/set-key
       "gs" 'magit-status
       "gg" 'google-this-search
-      "gt" 'google-translate-at-point)
+      "gt" 'google-translate-at-point
+      "gb" 'browse-at-remote
+      "gl" 'git-link)
 
     (evil-leader/set-key
       "wu" 'winner-undo
       "wU" 'winner-redo
-      "wo" 'ace-window)
+      "wo" 'delete-other-windows
+      "ww" 'ace-window
 
-    (evil-leader/set-key
-      "ss" 'avy-goto-char
-      "sn" 'yas-new-snippet
-      "sv" 'yas-visit-snippet-file)
+      (evil-leader/set-key
+	"ci" 'evilnc-comment-or-uncomment-lines
+	"cl" 'evilnc-quick-comment-or-uncomment-to-the-line
+	"cc" 'evilnc-copy-and-comment-lines
+	"cp" 'evilnc-comment-or-uncomment-paragraphs
+	"cr" 'comment-or-uncomment-region
+	"cv" 'evilnc-toggle-invert-comment-line-by-line
+	"."  'evilnc-copy-and-comment-operator
+	"\\" 'evilnc-comment-operator	; if you prefer backslash key)
 
-    (evil-leader/set-key
-      "t." 'cc))
+	(evil-leader/set-key
+	  "ss" 'avy-goto-char
+	  "sn" 'yas-new-snippet
+	  "sv" 'yas-visit-snippet-file))))
 #+END_SRC
