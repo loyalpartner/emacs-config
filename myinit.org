@@ -1012,7 +1012,7 @@
     (interactive)
     (run-at-time (* 5 60) nil
 		 (lambda ()
-		   (switch-to-buffer (other-buffer))))
+		   (switch-to-buffer (other-buffer)))))
 #+END_SRC
 * keybindings
   #+BEGIN_SRC emacs-lisp
