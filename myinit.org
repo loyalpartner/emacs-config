@@ -2,15 +2,15 @@
 #+PROPERTY: header-args :comments yes :results silent
 * interface tweaks
   #+BEGIN_SRC emacs-lisp
-    (setq inhibit-startup-message t)
+  (setq inhibit-startup-message t)
 
-    (fset 'yes-or-no-p 'y-or-n-p)
-    (global-set-key (kbd "<f5>") 'revert-buffer)
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (global-set-key (kbd "<f5>") 'revert-buffer)
 
-    (setq indo-enable-flex-matching t)
+  (setq indo-enable-flex-matching t)
 
-    (setq ido-everywhere t)
-    (ido-mode 1)
+    ;; (setq ido-everywhere t)
+    ;; (ido-mode 1)
 
     (setq column-number-mode 1)
 
@@ -101,24 +101,31 @@
    #+END_SRC
 ** evil
    #+BEGIN_SRC emacs-lisp
-   (use-package evil
-     :ensure t
-     :hook (after-init . evil-mode)
-     :config
-     (use-package evil-nerd-commenter :ensure t)
-     (use-package evil-surround :ensure t)
-     (use-package evil-matchit :ensure t)
-     (use-package evil-visualstar :ensure t)
-     (use-package evil-leader :ensure t
-       :config (global-evil-leader-mode) (evil-leader/set-leader "<SPC>"))
-     (use-package evil-escape :ensure t
-       :config (evil-escape-mode 1) (setq evil-escape-key-sequence "hh" evil-escape-delay 0.3))
-     (setq evil-insert-state-map nil)
-     (setq evil-normal-state-modes nil)
-     (evil-set-initial-state 'snails-mode 'emacs)
-     (evil-set-initial-state 'help-mode 'emacs)
-     (evil-set-initial-state 'helpful-mode 'emacs)
-     (evil-set-initial-state 'snails-mode 'emacs))
+
+     (use-package evil
+       :ensure t
+       :hook (after-init . evil-mode)
+       :config
+       (use-package evil-nerd-commenter :ensure t)
+       (use-package evil-surround :ensure t)
+       (use-package evil-matchit :ensure t)
+       (use-package evil-visualstar :ensure t)
+       (use-package evil-leader :ensure t
+	 :config (global-evil-leader-mode) (evil-leader/set-leader "<SPC>"))
+       (use-package evil-escape :ensure t
+	 :config (evil-escape-mode 1) (setq evil-escape-key-sequence "hh" evil-escape-delay 0.3))
+       (setq evil-insert-state-map nil)
+       (setq evil-normal-state-modes nil)
+       ;;(add-to-list 'evil-emacs-state-modes 'nav-mode)
+       (evil-set-initial-state 'snails-mode 'emacs)
+       (evil-set-initial-state 'help-mode 'emacs)
+       (evil-set-initial-state 'helpful-mode 'emacs)
+       (evil-set-initial-state 'snails-mode 'emacs)
+       (evil-set-initial-state 'dired-mode 'emacs)
+       (evil-set-initial-state 'info-mode 'emacs)
+       (evil-set-initial-state 'elfeed-search-mode 'emacs)
+       (evil-set-initial-state 'elfeed-show-mode 'emacs)
+       (evil-set-initial-state 'newsticker-treeview-mode 'emacs))
    #+END_SRC
 ** which key
    #+BEGIN_SRC emacs-lisp
@@ -130,39 +137,43 @@
    #+END_SRC
 ** ivy/counsel/swiper
    #+BEGIN_SRC emacs-lisp
-  (use-package hydra :ensure t)
+     (use-package hydra :ensure t)
 
-  (use-package counsel :ensure t)
+     (use-package counsel :ensure t)
 
-  (use-package ivy
-    :ensure t
-    :diminish (ivy-mode)
-    :bind (("C-x b" . ivy-switch-buffer))
-    :config
-    (ivy-mode 1)
-    (setq ivy-use-virtual-buffers t)
-    (setq ivy-display-style 'fancy))
+     (use-package smex :ensure t)
+
+     (use-package ivy
+       :ensure t
+       :diminish (ivy-mode)
+       :bind (("C-x b" . ivy-switch-buffer))
+       :config
+       (ivy-mode 1)
+       (setq ivy-initial-inputs-alist nil)
+       (setq ivy-use-virtual-buffers t)
+       (setq ivy-display-style 'fancy))
 
 
-  (use-package wgrep :ensure t)
+     (use-package wgrep :ensure t)
 
-  (use-package swiper
-    :ensure t
-    :bind (("C-s" . swiper)
-	   ("C-r" . swiper)
-	   ("C-c C-r" . ivy-resume)
-	   ("M-x" . counsel-M-x)
-	   ("C-x C-f" . counsel-find-file)
-	   ("C-c g" . counsel-git)
-	   ("C-c j" . counsel-git-grep)
-	   ("C-c k" . counsel-ag))
-    :config
-    (progn
-      (ivy-mode 1)
-      (setq ivy-use-virtual-buffers t)
-      (setq ivy-display-style 'fancy)
-      (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
-      ))
+     (use-package swiper
+       :ensure t
+       :bind (("C-s" . swiper)
+	      ("C-r" . swiper)
+	      ("C-c C-r" . ivy-resume)
+	      ("M-x" . counsel-M-x)
+	      ("C-x C-f" . counsel-find-file)
+	      ("C-x d" . counsel-dired)
+	      ("C-c g" . counsel-git)
+	      ("C-c j" . counsel-git-grep)
+	      ("C-c k" . counsel-ag))
+       :config
+       (progn
+	 (ivy-mode 1)
+	 (setq ivy-use-virtual-buffers t)
+	 (setq ivy-display-style 'fancy)
+	 (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+	 ))
    #+END_SRC
 
 ** window
@@ -190,7 +201,7 @@
    #+BEGIN_SRC emacs-lisp
 (use-package avy
   :ensure t
-  :bind ("C-c g" . avy-goto-char))
+  :commands avy-goto-char)
    #+END_SRC
 
 ** company-mode
@@ -245,7 +256,7 @@
     (setq lsp-auto-configure nil))
    #+END_SRC
 ** edit config
-    #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
       (use-package hungry-delete :ensure t
 	:config (global-hungry-delete-mode))
 
@@ -257,6 +268,18 @@
 	:ensure t
 	:bind ("C-c m" . iedit-mode))
 
+      (use-package multiple-cursors
+	:ensure t
+	:bind (("C->"           . mc/mark-next-like-this)
+	       ("C-<"           . mc/mark-previous-like-this)
+	       ("C-M->"         . mc/skip-to-next-like-this)
+	       ("C-M-<"         . mc/skip-to-previous-like-this)
+	       ("C-c C-<"       . mc/mark-all-like-this)
+	       ("C-S-<mouse-1>" . mc/add-cursor-on-click)
+	       :map mc/keymap
+	       ("C-|" . mc/vertical-align-with-space))
+	:config
+	(setq mc/insert-numbers-default 1))
       ;; (use-package paredit
       ;;   :ensure t
       ;;   :hook ((emacs-lisp-mode . paredit-mode)
@@ -268,7 +291,7 @@
       ;;   :ensure t
       ;;   :bind (:map )
       ;;   :hook (prog-mode . paredit-everywhere-mode))
-    #+END_SRC
+   #+END_SRC
 *** snippet
     #+BEGIN_SRC emacs-lisp
    (use-package yasnippet
@@ -281,15 +304,15 @@
      :requires yasnippet)
     #+END_SRC
 ** atomic-chrome
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package atomic-chrome
     :ensure t
 
     :config
     (atomic-chrome-start-server))
-  #+END_SRC
+   #+END_SRC
 ** projectile
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   ;; https://docs.projectile.mx/en/latest/
   (use-package projectile
     :ensure t
@@ -305,19 +328,20 @@
     :ensure t
     :config
     (counsel-projectile-mode))
-  #+END_SRC
+   #+END_SRC
 ** server
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package server
     :config
     (unless (eq 't (server-running-p))
       (server-start)))
-  #+END_SRC
+   #+END_SRC
 ** tools
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package google-this
     :ensure t
-    :commands google-this-search)
+    :commands google-this-search
+    :config (google-this-mode +1))
 
   (use-package undo-tree
     :ensure t
@@ -340,8 +364,8 @@
 
 
   ;; (use-package fuz :ensure t
-  ;;   :if (not (eq system-type 'windows-nt)))
-  #+END_SRC
+  ;;   :if (not IS-WINDOWS))
+   #+END_SRC
 * version control
 ** git
    #+BEGIN_SRC emacs-lisp
@@ -398,14 +422,14 @@
       (modify-coding-system-alist 'process "*" 'gbk)
       (set-buffer-process-coding-system 'gbk 'gbk)
       (set-file-name-coding-system 'gbk)))
-  (when (eq system-type 'windows-nt)
+  (when IS-WINDOWS
     (add-hook 'shell-mode-hook 'change-shell-mode-coding))
 
    #+END_SRC
-** 输入法设置 
+** 输入法设置
    #+BEGIN_SRC emacs-lisp
      ;; rime
-     (when (eq system-type 'darwin)
+     (when IS-MAC
        (use-package liberime
 	 :after pyim		      ;:load-path "~/tmp/.emacs.d/liberime.so"
 	 :load-path "liberime.so"
@@ -470,8 +494,7 @@
    #+END_SRC
 ** other
    #+BEGIN_SRC emacs-lisp
-					  ;(when (eq system-type 'windows-nt)
-					  ;(set-default-font "Sarasa Term TC"))
+   ;;(when IS-WINDOWS (set-default-font "Sarasa Term TC"))
  ;; (use-package cnfonts
   ;;   :ensure t
   ;;   :config
@@ -548,7 +571,7 @@
    #+BEGIN_SRC emacs-lisp
   (use-package ahk-mode
     :ensure t
-    :if (eq system-type 'windows-nt))
+    :if IS-WINDOWS)
 
    #+END_SRC
 ** javascript
@@ -568,70 +591,71 @@
 * org
   #+BEGIN_SRC emacs-lisp
 
-  (with-eval-after-load 'org
-    (use-package org-protocol )
+    (with-eval-after-load 'org
+      (use-package org-protocol )
 
 
-    (use-package org-bullets
-      :ensure t
-      :init
-      (dolist (mode (list 'org-mode-hook 'org-journal-mode-hook))
-	(add-hook mode (lambda () (org-bullets-mode 1)))))
+      (use-package org-bullets
+	:ensure t
+	:init
+	(dolist (mode (list 'org-mode-hook 'org-journal-mode-hook))
+	  (add-hook mode (lambda () (org-bullets-mode 1)))))
 
 
-    (use-package org-pomodoro :ensure t)
+      (use-package org-pomodoro :ensure t)
 
-    (use-package org-journal :ensure t
-      :custom
-      (org-journal-dir "~/org/journal/")
-      (org-journal-date-format "%A, %d %B %Y"))
+      (use-package org-journal :ensure t
+	:custom
+	(org-journal-dir "~/org/journal/")
+	(org-journal-date-format "%A, %d %B %Y"))
 
-    (use-package org-agenda
-      :defer 10
-      :config
+      (use-package org-agenda
+	:defer 10
+	:config
+	(setq
+	 org-default-notes-file "~/org/inbox.org"
+	 org-agenda-files (list
+			   "~/org/inbox.org"
+			   "~/org/word.org"
+			   "~/org/email.org"
+			   "~/org/tasks.org"
+			   "~/org/wtasks.org"
+			   "~/org/wkb.org")))
+
+      (define-key org-mode-map (kbd "C-c l") 'org-store-link)
+      (global-set-key "\C-ca" 'org-agenda)
+      ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+
       (setq
-       org-default-notes-file "~/org/inbox.org"
-       org-agenda-files (list
-			 "~/org/inbox.org"
-			 "~/org/word.org"
-			 "~/org/email.org"
-			 "~/org/tasks.org"
-			 "~/org/wtasks.org"
-			 "~/org/wkb.org")))
-
-    ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-
-
-    (setq
-     org-id-link-to-org-use-id 'create-if-interactive
-     org-log-done 'time
-     ;; org-bullets-bullet-list '("■" "◆" "▲" "▶")
-     org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥")
-     org-agenda-start-on-weekday 0
-     org-todo-keywords '((sequence
-			  "TODO(t!)"
-			  "NEXT(n!)"
-			  "STARTED(a!)"
-			  "WAIT(w@/!)"
-			  "OTHERS(o!)"
-			  "|"
-			  "DONE(d)"
-			  "CANCELLED(c)")))
-    ;; http://www.zmonster.me/2018/02/28/org-mode-capture.html
-    (setq org-capture-templates '())
-    (add-to-list 'org-capture-templates '("t" "Task"))
-    (add-to-list 'org-capture-templates
-		 '("N" "Note/Data"
-		   entry (file+headline "~/org/inbox.org" "Note")
-		   "* %:annotation \n\n  Source: %u \n\n %i\n\n "))
-    (add-to-list 'org-capture-templates
-		 '("n" "Note/Data"
-		   entry (file+headline "~/org/inbox.org" "Note")
-		   "* %? \n\n  Source: %u \n\n %i\n\n "))
-    ;;; org mobile
-    (setq org-mobile-directory "~/mobile")
-    (setq org-mobile-inbox-for-pull "~/mobile/index.org")
-    )
+       org-id-link-to-org-use-id 'create-if-interactive
+       org-log-done 'time
+       org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥")
+       org-agenda-start-on-weekday 0
+       org-todo-keywords '((sequence
+			    "TODO(t!)"
+			    "NEXT(n!)"
+			    "STARTED(a!)"
+			    "WAIT(w@/!)"
+			    "OTHERS(o!)"
+			    "|"
+			    "DONE(d)"
+			    "CANCELLED(c)")))
+      ;; http://www.zmonster.me/2018/02/28/org-mode-capture.html
+      (progn
+	(setq org-capture-templates '())
+	(add-to-list 'org-capture-templates '("t" "Task"))
+	(add-to-list 'org-capture-templates
+		     '("l" "links"
+		       item (file+olp "~/org/inbox.org" "Links" )
+		       "- %:annotation \n\n"))
+	(add-to-list 'org-capture-templates
+		     '("n" "Note/Data"
+		       entry (file+headline "~/org/inbox.org" "Note")
+		       "* %? \n\n  Source: %u \n\n %i\n\n ")))
+	;;; org mobile
+      (setq org-mobile-directory "~/mobile")
+      (setq org-mobile-inbox-for-pull "~/mobile/index.org"))
   #+END_SRC
 * lazy cat' toolset
 ** snails 快速搜索
@@ -640,24 +664,24 @@
    #+END_SRC
 ** others
    #+BEGIN_SRC emacs-lisp
-  (use-package auto-save
-    :config
-    (auto-save-enable)
-    (setq auto-save-silent t)		; quietly save
-    (setq auto-save-delete-trailing-whitespace t)
-    (setq backup-directory-alist `(("." . "~/.emacs.d/saves"))))
+     (use-package auto-save
+       :config
+       (auto-save-enable)
+       (setq auto-save-silent t)		; quietly save
+       (setq auto-save-delete-trailing-whitespace t)
+       (setq backup-directory-alist `(("." . "~/.emacs.d/saves")))
+       :custom
+       (auto-save-idle 5))
 
 
+     (use-package google-translate
+       :bind (("C-c t" . google-translate-at-point))
+       :custom
+       (google-translate-default-target-language "zh-CN")
+       (google-translate-default-source-language "en"))
 
-  (use-package google-translate
-    :bind (("C-c t" . google-translate-at-point))
-    :custom
-    (google-translate-default-target-language "zh-CN")
-    (google-translate-default-source-language "en"))
-
-  (use-package insert-translated-name
-    :bind (("C-z C-c" . insert-translated-name-insert)))
-
+     (use-package insert-translated-name
+       :bind (("C-z C-c" . insert-translated-name-insert)))
    #+END_SRC
 ** thing edit
    #+BEGIN_SRC emacs-lisp
@@ -736,7 +760,7 @@
   #+END_SRC
 * application
 ** gnus
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (setq send-mail-function (quote smtpmail-send-it))
   (setq smtpmail-smtp-server "smtp.qq.com")
   (setq smtpmail-smtp-service 25)
@@ -749,35 +773,66 @@
 					  ;(autoload 'newsticker-show-news "newsticker" "Emacs Newsticker" t)
   (add-hook 'newsticker-mode-hook 'imenu-add-menubar-index)
   (defalias 'rss 'newsticker-show-news)
-  #+END_SRC
+   #+END_SRC
+** elfeed
+   #+BEGIN_SRC emacs-lisp
+
+  (setq elfeed-db-directory "~/org/elfeeddb")
+
+  (use-package elfeed
+    :ensure t
+    :commands elfeed)
+
+  (use-package elfeed-goodies
+    :ensure t
+    :after elfeed
+    :config
+    (elfeed-goodies/setup))
+
+  (use-package elfeed-org
+    :ensure t
+    :after elfeed
+    :config
+    (elfeed-org)
+    (setq rmh-elfeed-org-files (list "~/org/elfeed.org")))
+   #+END_SRC
 ** anki
    #+BEGIN_SRC emacs-lisp
-  (use-package anki-editor
-    :ensure t
-    :defer 5)
+     (use-package anki-editor
+       :ensure t
+       :defer 5)
 
-  (defun create-word-card (word result)
-    (let ((fields `(("正面" . ,word)
-		    ("背面" . ,result))))
-      (anki-editor--push-note
-       `((deck . "word")
-	 (note-id . -1)
-	 (note-type . "basic")
-	 (fields . ,fields)))))
+     (defun create-note (note)
+       "Request AnkiConnect for creating NOTE."
+       (let ((queue (anki-editor--anki-connect-invoke-queue)))
+	 (funcall queue
+		  'addNote
+		  `((note . ,(anki-editor--anki-connect-map-note note))))
 
-  ;; TODO 不处理中文
-  (defun create-card-with-point-word ()
-    (interactive)
-    (require 'youdao-dictionary)
-    (require 'anki-editor)
-    (let* ((string (thing-at-point 'word))
-	  (result (youdao-dictionary--format-result string)))
-      (create-word-card string (replace-regexp-in-string "\n" "<br>" result))))
+	 (funcall queue)))
 
-  (defalias 'cc 'create-card-with-point-word)
+      (defun create-word-card (word result)
+	(let ((fields `(("正面" . ,word)
+			("背面" . ,result))))
+	  (create-note
+	   `((deck . "word")
+	     (note-id . -1)
+	     (note-type . "basic")
+	     (fields . ,fields)))))
+
+      ;; TODO 不处理中文
+      (defun create-card-with-point-word ()
+	(interactive)
+	(require 'youdao-dictionary)
+	(require 'anki-editor)
+	(let* ((string (thing-at-point 'word))
+	      (result (youdao-dictionary--format-result string)))
+	  (create-word-card string (replace-regexp-in-string "\n" "<br>" result))))
+
+      (defalias 'cc 'create-card-with-point-word)
    #+END_SRC
 ** pomodoro
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (setq pomodoro-time 25)
   (defun pomodoro ()
     (interactive)
@@ -791,12 +846,20 @@
     (run-at-time (* 5 60) nil
 		 (lambda ()
 		   (switch-to-buffer (other-buffer)))))
-#+END_SRC
+   #+END_SRC
+** pdf-tools
+   #+BEGIN_SRC emacs-lisp
+  (use-package pdf-tools
+    :ensure t
+    :config (pdf-loader-install))
+   #+END_SRC
 ** keyfreq
    #+BEGIN_SRC emacs-lisp
   (use-package keyfreq
     :ensure t
-    :hook (prog-mode . keyfreq-mode))
+    :hook (prog-mode . keyfreq-mode)
+    :config
+    (keyfreq-autosave-mode +1))
 
   (setq keyfreq-excluded-commands
 	'(self-insert-command
@@ -1028,7 +1091,9 @@
    #+END_SRC
 * keybindings
   #+BEGIN_SRC emacs-lisp
+
     (with-eval-after-load 'evil-leader
+
       (evil-leader/set-key
 	"<SPC>" 'counsel-M-x)
 
@@ -1037,7 +1102,8 @@
 	"fr" 'counsel-recentf
 	"fs" 'snails
 	"fp" 'snails-search-point
-	"bb" 'ivy-switch-buffer)
+	"bb" 'ivy-switch-buffer
+	"bd" 'ido-kill-buffer)
 
       (evil-leader/set-key
 	"gs" 'magit-status
@@ -1064,8 +1130,12 @@
 
       (evil-leader/set-key
 	"an" 'newsticker-show-news
+	"ae" 'elfeed
 	"ap" 'pomodoro
 	"ak" 'keyfreq-show)
+
+      (evil-leader/set-key
+	"qr" 'restart-emacs)
 
       (evil-leader/set-key
 	"ss" 'avy-goto-char
