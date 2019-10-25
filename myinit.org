@@ -178,24 +178,31 @@
 
 ** window
    #+BEGIN_SRC emacs-lisp
-  (use-package ace-window
-    :ensure t
-    :defer t
-    :init
-    (progn
-      (global-set-key [remap other-window] 'ace-window)
-      (custom-set-faces
-       '(aw-leading-char-face
-	 ((t (:inherit ace-jump-face-foreground :height 3.0)))))))
+     (use-package posframe :ensure t)
 
-  (use-package window-numbering
-    :ensure t
-    :config
-    (window-numbering-mode))
+     ;; (use-package ace-window
+     ;;   :ensure t
+     ;;   :defer t
+     ;;   :bind ("M-s" . ace-window)
+     ;;   :init
+     ;;   (progn
+     ;;     (global-set-key [remap other-window] 'ace-window)
+     ;;     (custom-set-faces
+     ;;      '(aw-leading-char-face
+     ;;        ((t (:inherit ace-jump-face-foreground :height 3.0)))))))
+
+     ;; http://ergoemacs.org/emacs/effective_emacs.html
+     (global-set-key (kbd "M-2") 'delete-window) ; close current pane
+     (global-set-key (kbd "M-3") 'delete-other-windows) ; expand current pane
+     (global-set-key (kbd "M-4") 'split-window-right) ; split pane top/bottom
+     (global-set-key (kbd "M-5") 'split-window-below) ; split pane top/bottom
+     (global-set-key (kbd "M-s") 'other-window) ; split pane top/bottom
 
 
-  (use-package posframe
-    :ensure t)
+     ;; (use-package window-numbering
+     ;;   :ensure t
+     ;;   :config
+     ;;   (window-numbering-mode))
    #+END_SRC
 ** avy
    #+BEGIN_SRC emacs-lisp
@@ -489,7 +496,7 @@
        (setq pyim-page-length 5)
 
        :bind
-       (("M-s" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
+       (("M--" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
 	("C-;" . pyim-delete-word-from-personal-buffer)))
    #+END_SRC
 ** other
