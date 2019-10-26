@@ -102,30 +102,30 @@
 ** evil
    #+BEGIN_SRC emacs-lisp
 
-     (use-package evil
-       :ensure t
-       :hook (after-init . evil-mode)
-       :config
-       (use-package evil-nerd-commenter :ensure t)
-       (use-package evil-surround :ensure t)
-       (use-package evil-matchit :ensure t)
-       (use-package evil-visualstar :ensure t)
-       (use-package evil-leader :ensure t
-	 :config (global-evil-leader-mode) (evil-leader/set-leader "<SPC>"))
-       (use-package evil-escape :ensure t
-	 :config (evil-escape-mode 1) (setq evil-escape-key-sequence "hh" evil-escape-delay 0.3))
-       (setq evil-insert-state-map nil)
-       (setq evil-normal-state-modes nil)
-       ;;(add-to-list 'evil-emacs-state-modes 'nav-mode)
-       (evil-set-initial-state 'snails-mode 'emacs)
-       (evil-set-initial-state 'help-mode 'emacs)
-       (evil-set-initial-state 'helpful-mode 'emacs)
-       (evil-set-initial-state 'snails-mode 'emacs)
-       (evil-set-initial-state 'dired-mode 'emacs)
-       (evil-set-initial-state 'info-mode 'emacs)
-       (evil-set-initial-state 'elfeed-search-mode 'emacs)
-       (evil-set-initial-state 'elfeed-show-mode 'emacs)
-       (evil-set-initial-state 'newsticker-treeview-mode 'emacs))
+     ;; (use-package evil
+     ;;   :ensure t
+     ;;   :hook (after-init . evil-mode)
+     ;;   :config
+     ;;   (use-package evil-nerd-commenter :ensure t)
+     ;;   (use-package evil-surround :ensure t)
+     ;;   (use-package evil-matchit :ensure t)
+     ;;   (use-package evil-visualstar :ensure t)
+     ;;   (use-package evil-leader :ensure t
+     ;;     :config (global-evil-leader-mode) (evil-leader/set-leader "<SPC>"))
+     ;;   (use-package evil-escape :ensure t
+     ;;     :config (evil-escape-mode 1) (setq evil-escape-key-sequence "hh" evil-escape-delay 0.3))
+     ;;   (setq evil-insert-state-map nil)
+     ;;   (setq evil-normal-state-modes nil)
+     ;;   ;;(add-to-list 'evil-emacs-state-modes 'nav-mode)
+     ;;   (evil-set-initial-state 'snails-mode 'emacs)
+     ;;   (evil-set-initial-state 'help-mode 'emacs)
+     ;;   (evil-set-initial-state 'helpful-mode 'emacs)
+     ;;   (evil-set-initial-state 'snails-mode 'emacs)
+     ;;   (evil-set-initial-state 'dired-mode 'emacs)
+     ;;   (evil-set-initial-state 'info-mode 'emacs)
+     ;;   (evil-set-initial-state 'elfeed-search-mode 'emacs)
+     ;;   (evil-set-initial-state 'elfeed-show-mode 'emacs)
+     ;;   (evil-set-initial-state 'newsticker-treeview-mode 'emacs))
    #+END_SRC
 ** which key
    #+BEGIN_SRC emacs-lisp
@@ -190,13 +190,6 @@
      ;;     (custom-set-faces
      ;;      '(aw-leading-char-face
      ;;        ((t (:inherit ace-jump-face-foreground :height 3.0)))))))
-
-     ;; http://ergoemacs.org/emacs/effective_emacs.html
-     (global-set-key (kbd "M-2") 'delete-window) ; close current pane
-     (global-set-key (kbd "M-3") 'delete-other-windows) ; expand current pane
-     (global-set-key (kbd "M-4") 'split-window-right) ; split pane top/bottom
-     (global-set-key (kbd "M-5") 'split-window-below) ; split pane top/bottom
-     (global-set-key (kbd "M-s") 'other-window) ; split pane top/bottom
 
 
      ;; (use-package window-numbering
@@ -1099,53 +1092,67 @@
 * keybindings
   #+BEGIN_SRC emacs-lisp
 
-    (with-eval-after-load 'evil-leader
+    ;; (with-eval-after-load 'evil-leader
 
-      (evil-leader/set-key
-	"<SPC>" 'counsel-M-x)
+    ;;   (evil-leader/set-key
+    ;;     "<SPC>" 'counsel-M-x)
 
-      (evil-leader/set-key
-	"ff" 'counsel-find-file
-	"fr" 'counsel-recentf
-	"fs" 'snails
-	"fp" 'snails-search-point
-	"bb" 'ivy-switch-buffer
-	"bd" 'ido-kill-buffer)
+    ;;   (evil-leader/set-key
+    ;;     "ff" 'counsel-find-file
+    ;;     "fr" 'counsel-recentf
+    ;;     "fs" 'snails
+    ;;     "fp" 'snails-search-point
+    ;;     "bb" 'ivy-switch-buffer
+    ;;     "bd" 'ido-kill-buffer)
 
-      (evil-leader/set-key
-	"gs" 'magit-status
-	"gg" 'google-this-search
-	"gt" 'google-translate-at-point
-	"gb" 'browse-at-remote
-	"gl" 'git-link)
+    ;;   (evil-leader/set-key
+    ;;     "gs" 'magit-status
+    ;;     "gg" 'google-this-search
+    ;;     "gt" 'google-translate-at-point
+    ;;     "gb" 'browse-at-remote
+    ;;     "gl" 'git-link)
 
-      (evil-leader/set-key
-	"wu" 'winner-undo
-	"wU" 'winner-redo
-	"wo" 'delete-other-windows
-	"ww" 'ace-window)
+    ;;   (evil-leader/set-key
+    ;;     "wu" 'winner-undo
+    ;;     "wU" 'winner-redo
+    ;;     "wo" 'delete-other-windows
+    ;;     "ww" 'ace-window)
 
-      (evil-leader/set-key
-	"cl" 'evilnc-comment-or-uncomment-lines
-	"cL" 'evilnc-quick-comment-or-uncomment-to-the-line
-	"cc" 'evilnc-copy-and-comment-lines
-	"cp" 'evilnc-comment-or-uncomment-paragraphs
-	"cr" 'comment-or-uncomment-region
-	"cv" 'evilnc-toggle-invert-comment-line-by-line
-	"." 'evilnc-copy-and-comment-operator
-	"\\" 'evilnc-comment-operator)
+    ;;   (evil-leader/set-key
+    ;;     "cl" 'evilnc-comment-or-uncomment-lines
+    ;;     "cL" 'evilnc-quick-comment-or-uncomment-to-the-line
+    ;;     "cc" 'evilnc-copy-and-comment-lines
+    ;;     "cp" 'evilnc-comment-or-uncomment-paragraphs
+    ;;     "cr" 'comment-or-uncomment-region
+    ;;     "cv" 'evilnc-toggle-invert-comment-line-by-line
+    ;;     "." 'evilnc-copy-and-comment-operator
+    ;;     "\\" 'evilnc-comment-operator)
 
-      (evil-leader/set-key
-	"an" 'newsticker-show-news
-	"ae" 'elfeed
-	"ap" 'pomodoro
-	"ak" 'keyfreq-show)
+    ;;   (evil-leader/set-key
+    ;;     "an" 'newsticker-show-news
+    ;;     "ae" 'elfeed
+    ;;     "ap" 'pomodoro
+    ;;     "ak" 'keyfreq-show)
 
-      (evil-leader/set-key
-	"qr" 'restart-emacs)
+    ;;   (evil-leader/set-key
+    ;;     "qr" 'restart-emacs)
 
-      (evil-leader/set-key
-	"ss" 'avy-goto-char
-	"sn" 'yas-new-snippet
-	"sv" 'yas-visit-snippet-file))
+    ;;   (evil-leader/set-key
+    ;;     "ss" 'avy-goto-char
+    ;;     "sn" 'yas-new-snippet
+    ;;     "sv" 'yas-visit-snippet-file))
   #+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package xah-fly-keys
+    :ensure t
+    :init
+    (setq xah-fly-use-control-key nil)
+    (setq xah-fly-use-meta-key nil)
+    :config
+    (xah-fly-keys-set-layout "dvorak")
+    (xah-fly-keys 1)
+    (global-set-key (kbd "C-t") 'xah-fly-command-mode-activate))
+
+    (global-set-key [remap smex] 'counsel-M-x)
+#+END_SRC
