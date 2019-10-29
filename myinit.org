@@ -2,29 +2,41 @@
 #+PROPERTY: header-args :comments yes :results silent
 * interface tweaks
   #+BEGIN_SRC emacs-lisp
-  (setq inhibit-startup-message t)
+    ;;;  init
+    (setq inhibit-startup-message t)
 
-  (fset 'yes-or-no-p 'y-or-n-p)
-  (global-set-key (kbd "<f5>") 'revert-buffer)
+    (fset 'yes-or-no-p 'y-or-n-p)
+    (global-set-key (kbd "<f5>") 'revert-buffer)
 
-  (setq indo-enable-flex-matching t)
+    (setq frame-title-format "%b [%I] %f GNU/Emacs")
+    (setq indo-enable-flex-matching t)
 
     ;; (setq ido-everywhere t)
     ;; (ido-mode 1)
 
     (setq column-number-mode 1)
+    (global-display-line-numbers-mode +1)
 
     (blink-cursor-mode -1)
     (global-hl-line-mode)
 
+    (setq kill-ring-max 200)
+    (setq kill-do-not-save-duplicates t)
+
+    (setq-default indent-tabs-mode nil)
+
     (setq ring-bell-function 'ignore)
 
     (setq mouse-yank-at-point t)
-    ;(setq split-width-threshold nil)
+              ;(setq split-width-threshold nil)
 
-    ;;; make make ring easy to use.
+      ;;; make make ring easy to use.
     (setq set-mark-command-repeat-pop t)
     (defalias 'list-buffers 'ibuffer)
+
+    (setq recentf-max-saved-items 500)
+
+    (setq-default fill-column 80)
 
     ;; local variable safe
     (setq enable-local-variables t)
@@ -40,11 +52,8 @@
     (winner-mode)
     (windmove-default-keybindings)
 
-    (defun last-buffer1 ()
-      (interactive)
-      (switch-to-buffer (other-buffer)))
-
-    (define-key global-map (kbd "C-z r") 'last-buffer1)
+    (add-hook 'prog-mode-hook 'electric-pair-local-mode)
+    (add-hook 'prog-mode-hook 'electric-indent-local-mode)
   #+END_SRC
 * theme
   #+BEGIN_SRC emacs-lisp
@@ -53,15 +62,13 @@
     (scroll-bar-mode -1)
     (size-indication-mode t)
 
-    (use-package rainbow-delimiters
+    (use-package
+      rainbow-delimiters
       :ensure t
-      :hook
-      ((prog-mode . rainbow-delimiters-mode)
-       (org-mode . rainbow-delimiters-mode))
-      :config
-      (show-paren-mode 1)
-      :custom
-      (show-paren-style 'paren-blinking))
+      :config (show-paren-mode 1)
+      (rainbow-delimiters-mode 1)
+      :custom (show-paren-style
+	       'paren-blinking))
 
     ;;; https://www.emacswiki.org/emacs/UnicodeFonts
     (use-package unicode-fonts
@@ -69,17 +76,17 @@
       :config
       (unicode-fonts-setup))
 
-    (use-package doom-modeline
+    (use-package
+      doom-modeline
       :ensure t
-      :hook (after-init . doom-modeline-mode))
+      :config (doom-modeline-mode 1)
+      (use-package
+	doom-themes
+	:if (not IS-WINDOWS)
+	:ensure t
+	:config (load-theme 'doom-one t)))
 
     ;; (use-package molokai-theme :ensure t)
-
-    (use-package doom-themes :ensure t
-      :config
-      (load-theme 'doom-one t))
-
-
     (use-package beacon :ensure t
       :config (beacon-mode 1))
   #+END_SRC
@@ -155,7 +162,7 @@
        :bind (("C-x b" . ivy-switch-buffer))
        :config
        (ivy-mode 1)
-       ;; (setq ivy-initial-inputs-alist nil)
+       (setq ivy-initial-inputs-alist nil)
        (setq ivy-use-virtual-buffers t)
        ;; (setq ivy-display-style 'fancy)
        )
@@ -196,25 +203,8 @@
 ** window
    #+BEGIN_SRC emacs-lisp
      (use-package posframe :ensure t)
-
-     ;; (use-package ace-window
-     ;;   :ensure t
-     ;;   :defer t
-     ;;   :bind ("M-s" . ace-window)
-     ;;   :init
-     ;;   (progn
-     ;;     (global-set-key [remap other-window] 'ace-window)
-     ;;     (custom-set-faces
-     ;;      '(aw-leading-char-face
-     ;;        ((t (:inherit ace-jump-face-foreground :height 3.0)))))))
-
-
-     ;; (use-package window-numbering
-     ;;   :ensure t
-     ;;   :config
-     ;;   (window-numbering-mode))
    #+END_SRC
-** avy
+** COMMENT avy
    #+BEGIN_SRC emacs-lisp
 (use-package avy
   :ensure t
@@ -223,54 +213,54 @@
 
 ** company-mode
    #+BEGIN_SRC emacs-lisp
-  (use-package company
-    :ensure t
-    :diminish ""
-    :commands global-company-mode
-    :bind
-    (:map company-active-map
-	  ("C-n" . company-select-next)
-	  ("C-p" . company-select-previous))
-    :custom
-    (company-idle-delay 0.2)
-    (company-selection-wrap-around t)
-    (company-minimum-prefix-length 0)
-    (company-candidates-length 30)
-    (company-require-match nil)
-    (company-dabbrev-ignore-case nil)
-    (company-dabbrev-downcase nil)
-    (company-show-numbers t)
+     (use-package
+       company
+       :ensure t
+       :diminish ""
+       :commands global-company-mode
+       :bind (:map company-active-map
+		   ("C-n" . company-select-next)
+		   ("C-p" . company-select-previous))
+       :custom (company-idle-delay 0.2)
+       (company-selection-wrap-around
+	t)
+       (company-minimum-prefix-length
+	3)
+       (company-candidates-length 30)
+       (company-require-match nil)
+       (company-dabbrev-ignore-case
+	nil)
+       (company-dabbrev-downcase nil)
+       (company-show-numbers t)
+       :config (setq company-minimum-prefix-length
+		     3)
+       (global-company-mode)
+       (use-package
+	 company-statistics
+	 :ensure t
+	 :config (company-statistics-mode))
+       (bind-keys
+	:map company-active-map
+	("TAB" . company-complete)))
 
-    :config
-    (setq company-minimum-prefix-length 2)
-    (global-company-mode)
-    (use-package company-statistics
-      :ensure t
-      :config
-      (company-statistics-mode))
-    (bind-keys :map company-active-map
-	       ("TAB" . company-complete)))
+     (use-package
+       company-quickhelp
+       :ensure t
+       :config (company-quickhelp-mode 1))
 
-  (use-package company-quickhelp
-    :ensure t
-    :config
-    (company-quickhelp-mode))
+     (use-package
+       lsp-mode
+       :ensure t
+       :commands lsp)
 
-  (use-package company-posframe
-    :ensure t
-    :config
-    (company-posframe-mode 1))
-
-  (use-package lsp-mode :ensure t
-    :commands lsp)
-
-  (use-package company-lsp
-    :ensure t
-    :commands company-lsp
-    :config
-    ;; (push 'company-lsp company-backends)
-    (setq company-lsp-enable-recompletion t)
-    (setq lsp-auto-configure nil))
+     (use-package
+       company-lsp
+       :ensure t
+       :commands company-lsp
+       :config ;; (push 'company-lsp company-backends)
+       (setq company-lsp-enable-recompletion
+	     t)
+       (setq lsp-auto-configure nil))
    #+END_SRC
 ** edit config
    #+BEGIN_SRC emacs-lisp
@@ -357,7 +347,6 @@
    #+BEGIN_SRC emacs-lisp
   (use-package google-this
     :ensure t
-    :commands google-this-search
     :config (google-this-mode +1))
 
   (use-package undo-tree
@@ -446,7 +435,6 @@
 ** 输入法设置
    #+BEGIN_SRC emacs-lisp
      ;; rime
-
 	 ;;; https://github.com/tumashu/pyim#org37155c7
      (use-package pyim
        :ensure nil
@@ -459,37 +447,14 @@
 
        (setq default-input-method "pyim")
        (setq pyim-default-scheme 'xiaohe-shuangpin)
-       ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
-       ;; 我自己使用的中英文动态切换规则是：
-       ;; 1. 光标只有在注释里面时，才可以输入中文。
-       ;; 2. 光标前是汉字字符时，才能输入中文。
-       ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
-       ;; (setq-default pyim-english-input-switch-functions
-       ;; 	      '(pyim-probe-dynamic-english
-       ;; 		pyim-probe-isearch-mode
-       ;; 					;pyim-probe-program-mode
-       ;; 		pyim-probe-org-structure-template))
-
-       ;; (setq-default pyim-punctuation-half-width-functions
-       ;; 	      '(pyim-probe-punctuation-line-beginning
-       ;; 		pyim-probe-punctuation-after-punctuation))
 
        ;; 开启拼音搜索功能
        (pyim-isearch-mode 1)
-
-       ;; 使用 popup-el 来绘制选词框, 如果用 emacs26, 建议设置
-       ;; 为 'posframe, 速度很快并且菜单不会变形，不过需要用户
-       ;; 手动安装 posframe 包。
        (setq pyim-page-tooltip 'posframe)
-
-       ;; 选词框显示5个候选词
        (setq pyim-page-length 5)
-
        :bind
-       (("M-;" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
+       (("M-s" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
 	("C-;" . pyim-delete-word-from-personal-buffer)))
-
-
      (when IS-MAC
        (use-package liberime
 	 :after pyim		      ;:load-path "~/tmp/.emacs.d/liberime.so"
@@ -541,6 +506,23 @@
   (defalias 'sws 'search-word-structure)
    #+END_SRC
 * program
+** COMMENT smartparens
+被 electric-pair-mode 替换
+#+BEGIN_SRC emacs-lisp
+  (use-package
+    smartparens-config
+    :ensure smartparens
+    :config (progn
+	      (show-smartparens-global-mode
+	       t))
+    (add-hook
+     'prog-mode-hook
+     'turn-on-smartparens-strict-mode)
+    (add-hook
+     'markdown-mode-hook
+     'turn-on-smartparens-strict-mode)
+    (sp-local-pair 'prog-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
+#+END_SRC
 ** flycheck
    #+BEGIN_SRC emacs-lisp
 (use-package flycheck
@@ -558,7 +540,7 @@
   ;; (use-package evil-lispy :ensure t
   ;;   :hook (lispy-mode . evil-lispy-mode))
    #+END_SRC
-** aggressive 让代码一直保持缩进
+** COMMENT aggressive 让代码一直保持缩进
    #+BEGIN_SRC emacs-lisp
   (use-package aggressive-indent
     :ensure t
@@ -676,7 +658,7 @@
 * lazy cat' toolset
 ** snails 快速搜索
    #+BEGIN_SRC emacs-lisp
-  (use-package snails :commands snails)
+  (use-package snails :commands snails :if IS-MAC)
    #+END_SRC
 ** others
    #+BEGIN_SRC emacs-lisp
@@ -1122,6 +1104,58 @@
 
 
   (global-set-key [remap smex] 'counsel-M-x)
+  (setq ivy-initial-inputs-alist nil)
+
+  (defun my-bindkey-xfk-insert-mode ()
+    "Define keys for `xah-fly-insert-mode-activate-hook'"
+    (interactive)
+    (dolist (letter
+	     (mapcar
+	      #'char-to-string
+	      "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+      (define-key xah-fly-key-map (kbd letter) nil))
+    (define-key xah-fly-key-map (kbd "C-9") nil)
+    (define-key xah-fly-key-map (kbd "C-0") nil)
+
+    (define-key xah-fly-key-map (kbd "C-1") nil)
+    (define-key xah-fly-key-map (kbd "C-2") nil)
+    (define-key xah-fly-key-map (kbd "C-7") nil)
+    (define-key xah-fly-key-map (kbd "C-8") nil)
+
+    (define-key xah-fly-key-map (kbd "C-5") nil)
+    (define-key xah-fly-key-map (kbd "C-6") nil)
+
+    (define-key xah-fly-key-map (kbd "C-3") nil)
+    (define-key xah-fly-key-map (kbd "C-4") nil)
+
+    )
+
+  (defun my-bindkey-xfk-command-mode ()
+    "Define keys for `xah-fly-command-mode-activate-hook'"
+    (interactive)
+    (define-key xah-fly-key-map (kbd "Y") 'youdao-dictionary-search-at-point-posframe)
+    (define-key xah-fly-key-map (kbd "T") 'google-translate-at-point)
+    (define-key xah-fly-key-map (kbd "G") 'magit-status)
+    (define-key xah-fly-key-map (kbd "B") 'browse-at-remote)
+
+    (define-key xah-fly-key-map (kbd "C-9") 'scroll-down-command)
+    (define-key xah-fly-key-map (kbd "C-0") 'scroll-up-command)
+
+    (define-key xah-fly-key-map (kbd "C-1") 'xah-next-user-buffer)
+    (define-key xah-fly-key-map (kbd "C-2") 'xah-previous-user-buffer)
+    (define-key xah-fly-key-map (kbd "C-7") 'xah-previous-user-buffer)
+    (define-key xah-fly-key-map (kbd "C-8") 'xah-next-user-buffer)
+
+    (define-key xah-fly-key-map (kbd "C-5") 'xah-previous-emacs-buffer)
+    (define-key xah-fly-key-map (kbd "C-6") 'xah-next-emacs-buffer)
+
+    (define-key xah-fly-key-map (kbd "C-3") 'previous-error)
+    (define-key xah-fly-key-map (kbd "C-4") 'next-error)
+    (when current-input-method (deactivate-input-method)) ; disable input
+    )
+
+  (add-hook 'xah-fly-insert-mode-activate-hook 'my-bindkey-xfk-insert-mode)
+  (add-hook 'xah-fly-command-mode-activate-hook 'my-bindkey-xfk-command-mode)
 #+END_SRC
 ** COMMENT evil
   #+BEGIN_SRC emacs-lisp
