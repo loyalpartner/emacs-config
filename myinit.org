@@ -592,6 +592,9 @@
     (with-eval-after-load 'org
       (use-package org-protocol )
 
+      (global-set-key "\C-cl" 'org-store-link)
+      (global-set-key "\C-cc" 'org-capture)
+      (global-set-key "\C-ca" 'org-agenda)
 
       (use-package org-bullets
 	:ensure t
@@ -777,24 +780,28 @@
 ** elfeed
    #+BEGIN_SRC emacs-lisp
 
-  (setq elfeed-db-directory "~/org/elfeeddb")
+     (setq elfeed-db-directory "~/org/elfeeddb")
 
-  (use-package elfeed
-    :ensure t
-    :commands elfeed)
+     (use-package elfeed
+       :ensure t
+       :commands elfeed)
 
-  (use-package elfeed-goodies
-    :ensure t
-    :after elfeed
-    :config
-    (elfeed-goodies/setup))
+     (use-package elfeed-goodies
+       :ensure t
+       :after elfeed
+       :config
+       (elfeed-goodies/setup))
 
-  (use-package elfeed-org
-    :ensure t
-    :after elfeed
-    :config
-    (elfeed-org)
-    (setq rmh-elfeed-org-files (list "~/org/elfeed.org")))
+     (use-package elfeed-org
+       :ensure t
+       :after elfeed
+       :config
+       (elfeed-org)
+       (setq rmh-elfeed-org-files (list "~/org/elfeed.org")))
+     (add-to-list 'org-capture-templates
+                          '("R" "RSS"
+                            entry (file+headline "~/org/elfeed.org" "Links" )
+                            "** %:annotation \n\n"))
    #+END_SRC
 ** anki
    #+BEGIN_SRC emacs-lisp
