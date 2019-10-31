@@ -1,67 +1,77 @@
 #+STARTUP: overview
 #+PROPERTY: header-args :comments yes :results silent
 * interface tweaks
+  windows grep 设置
+#+BEGIN_SRC emacs-lisp
+    ;;; https://www.emacswiki.org/emacs/GrepMode#MSYS
+      (when IS-WINDOWS
+        (setenv "PATH"
+                (concat
+                 ;; Change this with your path to MSYS bin d
+                 (file-name-directory
+                  (executable-find "git"))
+                 (file-name-directory
+                  (executable-find "grep"))
+                 (getenv "PATH"))))
+#+END_SRC
+
+  禁止显示开始屏幕
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-startup-message t)
+#+END_SRC
+
   #+BEGIN_SRC emacs-lisp
-  ;;; https://www.emacswiki.org/emacs/GrepMode#MSYS
-    (when IS-WINDOWS (setenv "PATH"
-                             (concat
-                              ;; Change this with your path to MSYS bin d
-                              (file-name-directory
-                               (executable-find "grep"))
-                              (getenv "PATH"))))
-      ;;;  init
-    (setq inhibit-startup-message t)
 
-    (fset 'yes-or-no-p 'y-or-n-p)
-    (global-set-key (kbd "<f5>") 'revert-buffer)
+      (fset 'yes-or-no-p 'y-or-n-p)
 
-    (setq frame-title-format "%b [%I] %f GNU/Emacs")
-    (setq indo-enable-flex-matching t)
+      (setq frame-title-format "%b [%I] %f GNU/Emacs")
+      (setq indo-enable-flex-matching t)
 
-    ;; (setq ido-everywhere t)
-    ;; (ido-mode 1)
+      ;; (setq ido-everywhere t)
+      ;; (ido-mode 1)
 
-    (setq column-number-mode 1)
-    (global-display-line-numbers-mode +1)
+      (setq column-number-mode 1)
+      (global-display-line-numbers-mode +1)
 
-    (blink-cursor-mode -1)
-    (global-hl-line-mode)
+      (blink-cursor-mode -1)
+      (global-hl-line-mode)
 
-    (setq kill-ring-max 200)
-    (setq kill-do-not-save-duplicates t)
+      (setq kill-ring-max 200)
+      (setq kill-do-not-save-duplicates t)
 
-    (setq-default indent-tabs-mode nil)
+      (setq-default indent-tabs-mode nil)
 
-    (setq ring-bell-function 'ignore)
+      (setq ring-bell-function 'ignore)
 
-    (setq mouse-yank-at-point t)
-                                            ;(setq split-width-threshold nil)
+      (setq mouse-yank-at-point t)
+                                              ;(setq split-width-threshold nil)
 
-        ;;; make make ring easy to use.
-    (setq set-mark-command-repeat-pop t)
-    (defalias 'list-buffers 'ibuffer)
+          ;;; make make ring easy to use.
+      (setq set-mark-command-repeat-pop t)
+      (defalias 'list-buffers 'ibuffer)
 
-    (setq recentf-max-saved-items 500)
+      (setq recentf-max-saved-items 500)
 
-    (setq-default fill-column 80)
+      (setq-default fill-column 80)
 
-    ;; local variable safe
-    (setq enable-local-variables t)
+      ;; local variable safe
+      (setq enable-local-variables t)
 
-    (use-package exec-path-from-shell
-      :if (memq window-system '(mac ns))
-      :ensure t
-      :config
-      (exec-path-from-shell-initialize))
+      (use-package exec-path-from-shell
+        :if (memq window-system '(mac ns))
+        :ensure t
+        :config
+        (exec-path-from-shell-initialize))
 
-    (global-unset-key (kbd "C-z"))
+      (global-unset-key (kbd "C-z"))
 
-    (winner-mode)
-    (windmove-default-keybindings)
+      (winner-mode)
+      (windmove-default-keybindings)
 
-    (add-hook 'prog-mode-hook 'electric-pair-local-mode)
-    (add-hook 'prog-mode-hook 'electric-indent-local-mode)
+      (add-hook 'prog-mode-hook 'electric-pair-local-mode)
+      (add-hook 'prog-mode-hook 'electric-indent-local-mode)
   #+END_SRC
+
 * theme
   #+BEGIN_SRC emacs-lisp
 
