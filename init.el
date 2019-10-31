@@ -15,7 +15,6 @@
 (defconst IS-BSD     (or IS-MAC (eq system-type 'berkeley-unix)))
 
 (setq custom-file "~/.emacs.d/custom.el")
-
 (when (file-exists-p custom-file)
   (load custom-file))
 
@@ -24,7 +23,13 @@
 ;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
-  (package-install 'use-package))
+  (package-install 'use-package)
+  (use-package exec-path-from-shell
+    :if (memq window-system '(mac ns))
+    :ensure t
+    :config
+    (exec-path-from-shell-initialize)))
+
 
 (defun add-subdirs-to-load-path (dir)
   "Recursive add directories to `load-path'."

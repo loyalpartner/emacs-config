@@ -1,7 +1,8 @@
 #+STARTUP: overview
 #+PROPERTY: header-args :comments yes :results silent
 * interface tweaks
-  windows grep 设置
+
+windows grep 设置
 #+BEGIN_SRC emacs-lisp
     ;;; https://www.emacswiki.org/emacs/GrepMode#MSYS
       (when IS-WINDOWS
@@ -15,70 +16,56 @@
                  (getenv "PATH"))))
 #+END_SRC
 
-  禁止显示开始屏幕
+禁止显示开始屏幕
 #+BEGIN_SRC emacs-lisp
 (setq inhibit-startup-message t)
 #+END_SRC
 
+yes-or-no-p 提示用缩写
+#+BEGIN_SRC emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+kill ring
+#+BEGIN_SRC emacs-lisp
+(setq kill-ring-max 200)
+(setq kill-do-not-save-duplicates t)
+#+END_SRC
+
   #+BEGIN_SRC emacs-lisp
 
-      (fset 'yes-or-no-p 'y-or-n-p)
 
-      (setq frame-title-format "%b [%I] %f GNU/Emacs")
-      (setq indo-enable-flex-matching t)
+    (setq indo-enable-flex-matching t)
 
-      ;; (setq ido-everywhere t)
-      ;; (ido-mode 1)
+    ;; (setq ido-everywhere t)
+    ;; (ido-mode 1)
 
-      (setq column-number-mode 1)
-      (global-display-line-numbers-mode +1)
 
-      (blink-cursor-mode -1)
-      (global-hl-line-mode)
+    (setq-default indent-tabs-mode nil)
 
-      (setq kill-ring-max 200)
-      (setq kill-do-not-save-duplicates t)
+    (setq ring-bell-function 'ignore)
 
-      (setq-default indent-tabs-mode nil)
+    (setq mouse-yank-at-point t)
 
-      (setq ring-bell-function 'ignore)
+        ;;; make make ring easy to use.
+    (setq set-mark-command-repeat-pop t)
+    (defalias 'list-buffers 'ibuffer)
 
-      (setq mouse-yank-at-point t)
-                                              ;(setq split-width-threshold nil)
+    (setq recentf-max-saved-items 500)
 
-          ;;; make make ring easy to use.
-      (setq set-mark-command-repeat-pop t)
-      (defalias 'list-buffers 'ibuffer)
+    (setq-default fill-column 80)
 
-      (setq recentf-max-saved-items 500)
+    ;; local variable safe
+    (setq enable-local-variables t)
 
-      (setq-default fill-column 80)
+    (global-unset-key (kbd "C-z"))
 
-      ;; local variable safe
-      (setq enable-local-variables t)
-
-      (use-package exec-path-from-shell
-        :if (memq window-system '(mac ns))
-        :ensure t
-        :config
-        (exec-path-from-shell-initialize))
-
-      (global-unset-key (kbd "C-z"))
-
-      (winner-mode)
-      (windmove-default-keybindings)
-
-      (add-hook 'prog-mode-hook 'electric-pair-local-mode)
-      (add-hook 'prog-mode-hook 'electric-indent-local-mode)
+    (add-hook 'prog-mode-hook 'electric-pair-local-mode)
+    (add-hook 'prog-mode-hook 'electric-indent-local-mode)
   #+END_SRC
 
 * theme
   #+BEGIN_SRC emacs-lisp
-
-    (tool-bar-mode -1)
-    (scroll-bar-mode -1)
-    (size-indication-mode t)
-
     (use-package
       rainbow-delimiters
       :ensure t
@@ -107,6 +94,17 @@
     (use-package beacon :ensure t
       :config (beacon-mode 1))
   #+END_SRC
+
+  外观设置
+#+BEGIN_SRC emacs-lisp
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(size-indication-mode t)
+(column-number-mode 1)
+(blink-cursor-mode 1)
+(global-hl-line-mode)
+#+END_SRC
+
 ** emojify
    emoji 显示
    #+BEGIN_SRC emacs-lisp
@@ -219,10 +217,15 @@
 #+END_SRC
 ** window
    posframe
-   #+BEGIN_SRC emacs-lisp
-     (use-package posframe :ensure t)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(use-package posframe :ensure t)
+#+END_SRC
 
+   启用 winner-mode
+#+BEGIN_SRC emacs-lisp
+(winner-mode)
+(windmove-default-keybindings)
+#+END_SRC
    eyebrowse
 #+BEGIN_SRC emacs-lisp
 (use-package eyebrowse :ensure t
