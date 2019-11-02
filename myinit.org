@@ -480,7 +480,7 @@ kill ring
        (setq pyim-page-tooltip 'posframe)
        (setq pyim-page-length 5)
        :bind
-       (("M-s" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
+       (;("M-s" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
 	("C-;" . pyim-delete-word-from-personal-buffer)))
      (when IS-MAC
        (use-package liberime
@@ -706,7 +706,6 @@ kill ring
      (use-package google-translate
        :bind (("C-c t" . google-translate-at-point))
        :config
-       (setq google-translate-output-destination 'popup)
        :custom
        (google-translate-default-target-language "zh-CN")
        (google-translate-default-source-language "en"))
@@ -1127,71 +1126,72 @@ kill ring
 * keybindings
 ** xah-fly-keys
 #+BEGIN_SRC emacs-lisp
-  (use-package xah-fly-keys
-    :ensure t
-    :init
-    (setq xah-fly-use-control-key nil)
-    (setq xah-fly-use-meta-key nil)
-    :config
-    (xah-fly-keys-set-layout "dvorak")
-    (xah-fly-keys 1)
-    (global-set-key (kbd "M-c") 'xah-fly-command-mode-activate))
+    (use-package xah-fly-keys
+      :ensure t
+      :init
+      (setq xah-fly-use-control-key nil)
+      (setq xah-fly-use-meta-key nil)
+      :config
+      (xah-fly-keys-set-layout "dvorak")
+      (xah-fly-keys 1)
+      (global-set-key (kbd "M-c") 'xah-fly-command-mode-activate))
 
 
-  (global-set-key [remap smex] 'counsel-M-x)
-  (setq ivy-initial-inputs-alist nil)
+    (global-set-key [remap smex] 'counsel-M-x)
+    (setq ivy-initial-inputs-alist nil)
 
-(defun my-bindkey-xfk-insert-mode ()
-  "Define keys for `xah-fly-insert-mode-activate-hook'"
-  (interactive)
-  (dolist (letter
-	     (mapcar
-	      #'char-to-string
-	      "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
-    (define-key xah-fly-key-map (kbd letter) nil))
-  (define-key xah-fly-key-map (kbd "C-9") nil)
-  (define-key xah-fly-key-map (kbd "C-0") nil)
-
-  (define-key xah-fly-key-map (kbd "C-1") nil)
-  (define-key xah-fly-key-map (kbd "C-2") nil)
-  (define-key xah-fly-key-map (kbd "C-7") nil)
-  (define-key xah-fly-key-map (kbd "C-8") nil)
-
-  (define-key xah-fly-key-map (kbd "C-5") nil)
-  (define-key xah-fly-key-map (kbd "C-6") nil)
-
-  (define-key xah-fly-key-map (kbd "C-3") nil)
-  (define-key xah-fly-key-map (kbd "C-4") nil)
-
-  )
-
-  (defun my-bindkey-xfk-command-mode ()
-    "Define keys for `xah-fly-command-mode-activate-hook'"
+  (defun my-bindkey-xfk-insert-mode ()
+    "Define keys for `xah-fly-insert-mode-activate-hook'"
     (interactive)
-    (define-key xah-fly-key-map (kbd "Y") 'youdao-dictionary-search-at-point-posframe)
-    (define-key xah-fly-key-map (kbd "T") 'google-translate-at-point)
-    (define-key xah-fly-key-map (kbd "G") 'magit-status)
-    (define-key xah-fly-key-map (kbd "B") 'browse-at-remote)
-    (define-key xah-fly-key-map (kbd "E") 'elfeed)
+    (dolist (letter
+               (mapcar
+                #'char-to-string
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+      (define-key xah-fly-key-map (kbd letter) nil))
+    (define-key xah-fly-key-map (kbd "C-9") nil)
+    (define-key xah-fly-key-map (kbd "C-0") nil)
 
-    (define-key xah-fly-key-map (kbd "C-9") 'scroll-down-command)
-    (define-key xah-fly-key-map (kbd "C-0") 'scroll-up-command)
+    (define-key xah-fly-key-map (kbd "C-1") nil)
+    (define-key xah-fly-key-map (kbd "C-2") nil)
+    (define-key xah-fly-key-map (kbd "C-7") nil)
+    (define-key xah-fly-key-map (kbd "C-8") nil)
 
-    (define-key xah-fly-key-map (kbd "C-1") 'xah-next-user-buffer)
-    (define-key xah-fly-key-map (kbd "C-2") 'xah-previous-user-buffer)
-    (define-key xah-fly-key-map (kbd "C-7") 'xah-previous-user-buffer)
-    (define-key xah-fly-key-map (kbd "C-8") 'xah-next-user-buffer)
+    (define-key xah-fly-key-map (kbd "C-5") nil)
+    (define-key xah-fly-key-map (kbd "C-6") nil)
 
-    (define-key xah-fly-key-map (kbd "C-5") 'xah-previous-emacs-buffer)
-    (define-key xah-fly-key-map (kbd "C-6") 'xah-next-emacs-buffer)
-
-    (define-key xah-fly-key-map (kbd "C-3") 'previous-error)
-    (define-key xah-fly-key-map (kbd "C-4") 'next-error)
-    (when current-input-method (deactivate-input-method)) ; disable input
+    (define-key xah-fly-key-map (kbd "C-3") nil)
+    (define-key xah-fly-key-map (kbd "C-4") nil)
+    (define-key xah-fly-key-map (kbd "M-s") 'pyim-convert-string-at-point)
     )
 
-  (add-hook 'xah-fly-insert-mode-activate-hook 'my-bindkey-xfk-insert-mode)
-  (add-hook 'xah-fly-command-mode-activate-hook 'my-bindkey-xfk-command-mode)
+    (defun my-bindkey-xfk-command-mode ()
+      "Define keys for `xah-fly-command-mode-activate-hook'"
+      (interactive)
+      (define-key xah-fly-key-map (kbd "Y") 'youdao-dictionary-search-at-point-posframe)
+      (define-key xah-fly-key-map (kbd "T") 'google-translate-at-point)
+      (define-key xah-fly-key-map (kbd "G") 'magit-status)
+      (define-key xah-fly-key-map (kbd "B") 'browse-at-remote)
+      (define-key xah-fly-key-map (kbd "E") 'elfeed)
+
+      (define-key xah-fly-key-map (kbd "C-9") 'scroll-down-command)
+      (define-key xah-fly-key-map (kbd "C-0") 'scroll-up-command)
+
+      (define-key xah-fly-key-map (kbd "C-1") 'xah-next-user-buffer)
+      (define-key xah-fly-key-map (kbd "C-2") 'xah-previous-user-buffer)
+      (define-key xah-fly-key-map (kbd "C-7") 'xah-previous-user-buffer)
+      (define-key xah-fly-key-map (kbd "C-8") 'xah-next-user-buffer)
+
+      (define-key xah-fly-key-map (kbd "C-5") 'xah-previous-emacs-buffer)
+      (define-key xah-fly-key-map (kbd "C-6") 'xah-next-emacs-buffer)
+
+      (define-key xah-fly-key-map (kbd "C-3") 'previous-error)
+      (define-key xah-fly-key-map (kbd "C-4") 'next-error)
+      (define-key xah-fly-key-map (kbd "M-s") nil)
+      (when current-input-method (deactivate-input-method)) ; disable input
+      ）
+
+    (add-hook 'xah-fly-insert-mode-activate-hook 'my-bindkey-xfk-insert-mode)
+    (add-hook 'xah-fly-command-mode-activate-hook 'my-bindkey-xfk-command-mode)
 #+END_SRC
 ** COMMENT evil
   #+BEGIN_SRC emacs-lisp
