@@ -1,6 +1,10 @@
 #+STARTUP: overview
 #+PROPERTY: header-args :comments yes :results silent
 * interface tweaks
+快捷访问 C-x r j E [[info:emacs#File%20Registers][点我跳转]]
+#+BEGIN_SRC emacs-lisp
+  (set-register ?s `(file . ,emacs-init-org))
+#+END_SRC
 
 windows grep 设置
 #+BEGIN_SRC emacs-lisp
@@ -26,12 +30,20 @@ yes-or-no-p 提示用缩写
 (fset 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
 
-kill ring
+COMMENT kill ring
 #+BEGIN_SRC emacs-lisp
 (setq kill-ring-max 200)
 (setq kill-do-not-save-duplicates t)
 #+END_SRC
 
+保存emacs状态
+#+BEGIN_SRC emacs-lisp
+  ;; (desktop-save-mode 1)
+  ;; (savehist-mode 1)
+  ;; (add-to-list 'savehist-additional-variables 'kill-ring) ;; for example
+#+END_SRC
+
+其他
   #+BEGIN_SRC emacs-lisp
 
 
@@ -103,6 +115,7 @@ kill ring
 (column-number-mode 1)
 (blink-cursor-mode 1)
 (global-hl-line-mode)
+
 #+END_SRC
 
 ** emojify
@@ -121,9 +134,9 @@ kill ring
    :ensure t
    :commands try)
    #+END_SRC
-** evil
+** COMMENT evil
    #+BEGIN_SRC emacs-lisp
-     (use-package evil :ensure t)
+
      ;; (use-package evil
      ;;   :ensure t
      ;;   :hook (after-init . evil-mode)
@@ -246,34 +259,39 @@ kill ring
        :diminish ""
        :commands global-company-mode
        :bind (:map company-active-map
-		   ("C-n" . company-select-next)
-		   ("C-p" . company-select-previous))
+                   ("C-n" . company-select-next)
+                   ("C-p" . company-select-previous))
        :custom (company-idle-delay 0.2)
        (company-selection-wrap-around
-	t)
+        t)
        (company-minimum-prefix-length
-	3)
+        3)
        (company-candidates-length 30)
        (company-require-match nil)
        (company-dabbrev-ignore-case
-	nil)
+        nil)
        (company-dabbrev-downcase nil)
        (company-show-numbers t)
        :config (setq company-minimum-prefix-length
-		     3)
+                     3)
        (global-company-mode)
        (use-package
-	 company-statistics
-	 :ensure t
-	 :config (company-statistics-mode))
+         company-statistics
+         :ensure t
+         :config (company-statistics-mode))
        (bind-keys
-	:map company-active-map
-	("TAB" . company-complete)))
+        :map company-active-map
+        ("TAB" . company-complete)))
 
      (use-package
        company-quickhelp
        :ensure t
        :config (company-quickhelp-mode 1))
+
+     ;; (use-package
+     ;;   company-ctags
+     ;;   :ensure t
+     ;;   :config (company-ctags-auto-setup))
 
      (use-package
        lsp-mode
@@ -286,45 +304,35 @@ kill ring
        :commands company-lsp
        :config ;; (push 'company-lsp company-backends)
        (setq company-lsp-enable-recompletion
-	     t)
+             t)
        (setq lsp-auto-configure nil))
    #+END_SRC
 ** edit config
    #+BEGIN_SRC emacs-lisp
-      (use-package hungry-delete :ensure t
-	:config (global-hungry-delete-mode))
+     ;; (use-package hungry-delete :ensure t
+     ;;   :config (global-hungry-delete-mode))
 
-      (use-package expand-region
-	:ensure t
-	:bind ("C-=" . er/expand-region))
+     (use-package expand-region
+       :ensure t
+       :bind ("C-=" . er/expand-region))
 
-      (use-package iedit
-	:ensure t
-	:bind ("C-c m" . iedit-mode))
+     (use-package iedit
+       :ensure t
+       :bind ("C-c m" . iedit-mode))
 
-      (use-package multiple-cursors
-	:ensure t
-	:bind (("C->"           . mc/mark-next-like-this)
-	       ("C-<"           . mc/mark-previous-like-this)
-	       ("C-M->"         . mc/skip-to-next-like-this)
-	       ("C-M-<"         . mc/skip-to-previous-like-this)
-	       ("C-c C-<"       . mc/mark-all-like-this)
-	       ("C-S-<mouse-1>" . mc/add-cursor-on-click)
-	       :map mc/keymap
-	       ("C-|" . mc/vertical-align-with-space))
-	:config
-	(setq mc/insert-numbers-default 1))
-      ;; (use-package paredit
-      ;;   :ensure t
-      ;;   :hook ((emacs-lisp-mode . paredit-mode)
-      ;; 	 (ielm-mode . paredit-mode)
-      ;; 	 (lisp-mode . paredit-mode)
-      ;; 	))
+     (use-package multiple-cursors
+       :ensure t
+       :bind (("C->"           . mc/mark-next-like-this)
+              ("C-<"           . mc/mark-previous-like-this)
+              ("C-M->"         . mc/skip-to-next-like-this)
+              ("C-M-<"         . mc/skip-to-previous-like-this)
+              ("C-c C-<"       . mc/mark-all-like-this)
+              ("C-S-<mouse-1>" . mc/add-cursor-on-click)
+              :map mc/keymap
+              ("C-|" . mc/vertical-align-with-space))
+       :config
+       (setq mc/insert-numbers-default 1))
 
-      ;; (use-package paredit-everywhere
-      ;;   :ensure t
-      ;;   :bind (:map )
-      ;;   :hook (prog-mode . paredit-everywhere-mode))
    #+END_SRC
 *** snippet
     #+BEGIN_SRC emacs-lisp
@@ -345,7 +353,7 @@ kill ring
     :config
     (atomic-chrome-start-server))
    #+END_SRC
-** projectile
+** COMMENT projectile
    #+BEGIN_SRC emacs-lisp
   ;; https://docs.projectile.mx/en/latest/
   (use-package projectile
@@ -372,32 +380,32 @@ kill ring
    #+END_SRC
 ** tools
    #+BEGIN_SRC emacs-lisp
-  (use-package google-this
-    :ensure t
-    :config (google-this-mode +1))
+     (use-package google-this
+       :ensure t
+       :config (google-this-mode +1))
 
-  (use-package undo-tree
-    :ensure t
-    :config
-    (global-undo-tree-mode)
-    :custom
-    (undo-tree-auto-save-history t)
-    (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
+     ;; (use-package undo-tree
+     ;;   :ensure t
+     ;;   :config
+     ;;   (global-undo-tree-mode)
+     ;;   :custom
+     ;;   (undo-tree-auto-save-history t)
+     ;;   (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
-  (use-package
-    helpful
-    :ensure t
-    :bind (("C-h f" . 'helpful-callable)
-	   ("C-h v" . 'helpful-variable)
-	   ("C-h k" . 'helpful-key)))
+     (use-package
+       helpful
+       :ensure t
+       :bind (("C-h f" . 'helpful-callable)
+              ("C-h v" . 'helpful-variable)
+              ("C-h k" . 'helpful-key)))
 
-  (use-package restart-emacs
-    :ensure
-    :commands restart-emacs)
+     (use-package restart-emacs
+       :ensure
+       :commands restart-emacs)
 
 
-  ;; (use-package fuz :ensure t
-  ;;   :if (not IS-WINDOWS))
+     ;; (use-package fuz :ensure t
+     ;;   :if (not IS-WINDOWS))
    #+END_SRC
 * version control
 ** git
@@ -512,10 +520,11 @@ kill ring
        :ensure t
        :config (global-pangu-spacing-mode 1))
 
-     (use-package ace-pinyin
-       :ensure t
-       :config
-       (ace-pinyin-global-mode 1))
+     ;; ace-pinyin-global-mode 会使 pop-global-mark 失效，只能返回一次
+     ;; (use-package ace-pinyin
+     ;;   :ensure t
+     ;;   :config
+     ;;   (ace-pinyin-global-mode 0))
 
      (use-package youdao-dictionary
        :ensure t
@@ -533,6 +542,13 @@ kill ring
      (defalias 'sws 'search-word-structure)
    #+END_SRC
 * program
+** tags
+#+BEGIN_SRC emacs-lisp
+  (setq tags-revert-without-query 1)
+  (use-package ctags-update
+    :ensure t
+    :hook (ahk . turn-on-ctags-auto-update-mode))
+#+END_SRC
 ** COMMENT smartparens
 被 electric-pair-mode 替换
 #+BEGIN_SRC emacs-lisp
@@ -617,74 +633,81 @@ kill ring
 * org
   #+BEGIN_SRC emacs-lisp
 
-    (with-eval-after-load 'org
-      (use-package org-protocol )
+        (with-eval-after-load 'org
+          (use-package org-protocol )
 
-      (global-set-key "\C-cl" 'org-store-link)
-      (global-set-key "\C-cc" 'org-capture)
-      (global-set-key "\C-ca" 'org-agenda)
-
-      (use-package org-bullets
-	:ensure t
-	:init
-	(dolist (mode (list 'org-mode-hook 'org-journal-mode-hook))
-	  (add-hook mode (lambda () (org-bullets-mode 1)))))
-
-
-      (use-package org-pomodoro :ensure t)
-
-      (use-package org-journal :ensure t
-	:custom
-	(org-journal-dir "~/org/journal/")
-	(org-journal-date-format "%A, %d %B %Y"))
-
-      (use-package org-agenda
-	:defer 10
-	:config
-	(setq
-	 org-default-notes-file "~/org/inbox.org"
-	 org-agenda-files (list
-			   "~/org/inbox.org"
-			   "~/org/word.org"
-			   "~/org/email.org"
-			   "~/org/tasks.org"
-			   "~/org/wtasks.org"
-			   "~/org/wkb.org")))
-
-      (define-key org-mode-map (kbd "C-c l") 'org-store-link)
-      (global-set-key "\C-ca" 'org-agenda)
-      ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+          (global-set-key "\C-cl" 'org-store-link)
+          (global-set-key "\C-cc" 'org-capture)
+          (global-set-key "\C-ca" 'org-agenda)
+                                            ;(global-set-key "\C-cb" 'org-iswitchb)
+          (setq org-M-RET-may-split-line nil)
+          (use-package org-bullets
+            :ensure t
+            :init
+            (dolist (mode (list 'org-mode-hook 'org-journal-mode-hook))
+              (add-hook mode (lambda () (org-bullets-mode 1)))))
 
 
-      (setq
-       org-id-link-to-org-use-id 'create-if-interactive
-       org-log-done 'time
-       org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥")
-       org-agenda-start-on-weekday 0
-       org-todo-keywords '((sequence
-			    "TODO(t!)"
-			    "NEXT(n!)"
-			    "STARTED(a!)"
-			    "WAIT(w@/!)"
-			    "OTHERS(o!)"
-			    "|"
-			    "DONE(d)"
-			    "CANCELLED(c)")))
-      ;; http://www.zmonster.me/2018/02/28/org-mode-capture.html
-      (progn
-	(setq org-capture-templates '())
-	(add-to-list 'org-capture-templates '("t" "Task"))
-	(add-to-list 'org-capture-templates
-		     '("l" "links"
-		       item (file+olp "~/org/inbox.org" "Links" )
-		       "- %:annotation \n\n"))
-	(add-to-list 'org-capture-templates
-		     '("n" "Note/Data"
-		       entry (file+headline "~/org/inbox.org" "Note")
-		       "* %? \n\n  Source: %u \n\n %i\n\n ")))
-	;;; org mobile
-      (setq org-mobile-directory "~/mobile")
-      (setq org-mobile-inbox-for-pull "~/mobile/index.org"))
+          (use-package org-pomodoro :ensure t)
+          (use-package deft
+            :bind ("<f8>" . deft)
+            :commands (deft)
+            :config (setq deft-directory "~/org"
+                          deft-extensions '("md" "org")))
+
+          (use-package org-journal :ensure t
+            :custom
+            (org-journal-dir "~/org/journal/")
+            (org-journal-date-format "%A, %d %B %Y"))
+
+
+          (use-package org-agenda
+            :defer 10
+            :config
+            (setq
+             org-default-notes-file "~/org/inbox.org"
+             org-agenda-files (list
+                               "~/org/inbox.org"
+                               emacs-init-org
+                               "~/org/todos.org"
+                               "~/org/word.org"
+                               "~/org/email.org"
+                               "~/org/tasks.org"
+                               "~/org/wtasks.org"
+                               "~/org/wkb.org")))
+
+                    ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+
+          (setq
+           org-id-link-to-org-use-id 'create-if-interactive
+           org-log-done 'time
+           org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥")
+           org-agenda-start-on-weekday 0
+           org-todo-keywords '((sequence
+                                "TODO(t!)"
+                                "NEXT(n!)"
+                                "STARTED(a!)"
+                                "WAIT(w@/!)"
+                                "OTHERS(o!)"
+                                "|"
+                                "DONE(d)"
+                                "CANCELLED(c)")))
+          ;; http://www.zmonster.me/2018/02/28/org-mode-capture.html
+          (progn
+            (setq org-capture-templates '())
+            (add-to-list 'org-capture-templates '("t" "Task"))
+            (add-to-list 'org-capture-templates
+                         '("l" "links"
+                           item (file+olp "~/org/inbox.org" "Links" )
+                           "- %:annotation \n\n"))
+            (add-to-list 'org-capture-templates
+                         '("n" "Note/Data"
+                           entry (file+headline "~/org/inbox.org" "Note")
+                           "* %? \n\n  Source: %u \n\n %i\n\n ")))
+    ;;; org mobile
+          (setq org-mobile-directory "~/mobile")
+          (setq org-mobile-inbox-for-pull "~/mobile/index.org"))
   #+END_SRC
 * lazy cat' toolset
 ** snails 快速搜索
@@ -700,7 +723,7 @@ kill ring
        (setq auto-save-delete-trailing-whitespace t)
        (setq backup-directory-alist `(("." . "~/.emacs.d/saves")))
        :custom
-       (auto-save-idle 5))
+       (auto-save-idle 1))
 
 
      (use-package google-translate
@@ -1126,27 +1149,32 @@ kill ring
 * keybindings
 ** xah-fly-keys
 #+BEGIN_SRC emacs-lisp
-    (use-package xah-fly-keys
-      :ensure t
-      :init
-      (setq xah-fly-use-control-key nil)
-      (setq xah-fly-use-meta-key nil)
-      :config
-      (xah-fly-keys-set-layout "dvorak")
-      (xah-fly-keys 1)
-      (global-set-key (kbd "M-c") 'xah-fly-command-mode-activate))
+  (use-package xah-fly-keys
+    :ensure t
+    :init
+    (setq xah-fly-use-control-key nil)
+    (setq xah-fly-use-meta-key nil)
+    :config
+    (xah-fly-keys-set-layout "dvorak")
+    (xah-fly-keys 1)
+    (global-set-key (kbd "M-c") 'xah-fly-command-mode-activate))
+
+  (global-set-key "\M-u" 'xah-toggle-letter-case)
 
 
-    (global-set-key [remap smex] 'counsel-M-x)
-    (setq ivy-initial-inputs-alist nil)
+  (global-set-key [remap smex] 'counsel-M-x)
+  (global-set-key [remap recentf-open-files] 'counsel-recentf)
+  (global-set-key [remap xah-open-file-fast] 'counsel-bookmark)
+
+  (setq ivy-initial-inputs-alist nil)
 
   (defun my-bindkey-xfk-insert-mode ()
     "Define keys for `xah-fly-insert-mode-activate-hook'"
     (interactive)
     (dolist (letter
-               (mapcar
-                #'char-to-string
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+             (mapcar
+              #'char-to-string
+              "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
       (define-key xah-fly-key-map (kbd letter) nil))
     (define-key xah-fly-key-map (kbd "C-9") nil)
     (define-key xah-fly-key-map (kbd "C-0") nil)
@@ -1164,34 +1192,34 @@ kill ring
     (define-key xah-fly-key-map (kbd "M-s") 'pyim-convert-string-at-point)
     )
 
-    (defun my-bindkey-xfk-command-mode ()
-      "Define keys for `xah-fly-command-mode-activate-hook'"
-      (interactive)
-      (define-key xah-fly-key-map (kbd "Y") 'youdao-dictionary-search-at-point-posframe)
-      (define-key xah-fly-key-map (kbd "T") 'google-translate-at-point)
-      (define-key xah-fly-key-map (kbd "G") 'magit-status)
-      (define-key xah-fly-key-map (kbd "B") 'browse-at-remote)
-      (define-key xah-fly-key-map (kbd "E") 'elfeed)
+  (defun my-bindkey-xfk-command-mode ()
+    "Define keys for `xah-fly-command-mode-activate-hook'"
+    (interactive)
+    (define-key xah-fly-key-map (kbd "Y") 'youdao-dictionary-search-at-point-posframe)
+    (define-key xah-fly-key-map (kbd "T") 'google-translate-at-point)
+    (define-key xah-fly-key-map (kbd "G") 'magit-status)
+    (define-key xah-fly-key-map (kbd "B") 'browse-at-remote)
+    (define-key xah-fly-key-map (kbd "E") 'elfeed)
 
-      (define-key xah-fly-key-map (kbd "C-9") 'scroll-down-command)
-      (define-key xah-fly-key-map (kbd "C-0") 'scroll-up-command)
+    (define-key xah-fly-key-map (kbd "C-9") 'scroll-down-command)
+    (define-key xah-fly-key-map (kbd "C-0") 'scroll-up-command)
 
-      (define-key xah-fly-key-map (kbd "C-1") 'xah-next-user-buffer)
-      (define-key xah-fly-key-map (kbd "C-2") 'xah-previous-user-buffer)
-      (define-key xah-fly-key-map (kbd "C-7") 'xah-previous-user-buffer)
-      (define-key xah-fly-key-map (kbd "C-8") 'xah-next-user-buffer)
+    (define-key xah-fly-key-map (kbd "C-1") 'xah-next-user-buffer)
+    (define-key xah-fly-key-map (kbd "C-2") 'xah-previous-user-buffer)
+    (define-key xah-fly-key-map (kbd "C-7") 'xah-previous-user-buffer)
+    (define-key xah-fly-key-map (kbd "C-8") 'xah-next-user-buffer)
 
-      (define-key xah-fly-key-map (kbd "C-5") 'xah-previous-emacs-buffer)
-      (define-key xah-fly-key-map (kbd "C-6") 'xah-next-emacs-buffer)
+    (define-key xah-fly-key-map (kbd "C-5") 'xah-previous-emacs-buffer)
+    (define-key xah-fly-key-map (kbd "C-6") 'xah-next-emacs-buffer)
 
-      (define-key xah-fly-key-map (kbd "C-3") 'previous-error)
-      (define-key xah-fly-key-map (kbd "C-4") 'next-error)
-      (define-key xah-fly-key-map (kbd "M-s") nil)
-      (when current-input-method (deactivate-input-method)) ; disable input
-      ）
+    (define-key xah-fly-key-map (kbd "C-3") 'previous-error)
+    (define-key xah-fly-key-map (kbd "C-4") 'next-error)
+    (define-key xah-fly-key-map (kbd "M-s") nil)
+    (when current-input-method (deactivate-input-method)) ; disable input
+    )
 
-    (add-hook 'xah-fly-insert-mode-activate-hook 'my-bindkey-xfk-insert-mode)
-    (add-hook 'xah-fly-command-mode-activate-hook 'my-bindkey-xfk-command-mode)
+  (add-hook 'xah-fly-insert-mode-activate-hook 'my-bindkey-xfk-insert-mode)
+  (add-hook 'xah-fly-command-mode-activate-hook 'my-bindkey-xfk-command-mode)
 #+END_SRC
 ** COMMENT evil
   #+BEGIN_SRC emacs-lisp

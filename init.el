@@ -38,11 +38,11 @@
     (normal-top-level-add-subdirs-to-load-path)))
 
 (defconst emacs-root-dir "~/.emacs.d")
+(defconst emacs-init-org (expand-file-name
+                          (concat emacs-root-dir "/myinit.org")))
 (add-subdirs-to-load-path "~/.emacs.d/local")
 
-(org-babel-load-file (expand-file-name
-		      (concat
-		       emacs-root-dir "/myinit.org")))
+(org-babel-load-file emacs-init-org)
 
 ;; (setq gc-cons-threshold (* 50 1000 1000))
 ;; (setq gc-cons-threshold (* 2 1000 1000))
