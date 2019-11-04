@@ -1,5 +1,6 @@
-
-[[./emacs_ctrl_key.svg]]
+[[emacs_ctrl_key.svg][ctrl 分布图]]
+[[emacs_meta_key.svg][
+meta key 分布图]]
 
 # my emacs conifg
 
@@ -22,3 +23,4 @@
 
 (load-file (expand-file-name "init.el" user-emacs-directory))
 #+END_SRC
+hello
