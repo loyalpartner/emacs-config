@@ -46,3 +46,4 @@
 
 ;; (setq gc-cons-threshold (* 50 1000 1000))
 ;; (setq gc-cons-threshold (* 2 1000 1000))
+(put 'upcase-region 'disabled nil)

@@ -1,4 +1,6 @@
 
+[[./emacs_ctrl_key.svg]]
+
 # my emacs conifg
 
 ## Use different versions of the configuration
