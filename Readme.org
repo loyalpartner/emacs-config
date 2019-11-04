@@ -1,5 +1,8 @@
-[[./emacs_ctrl_key.svg][ctrl 分布图]]
-[[./emacs_meta_key.svg][meta key 分布图]]
+ctrl 分布图
+[[./emacs_ctrl_key.svg]]
+
+meta key 分布图
+[[./emacs_meta_key.svg]]
 
 # my emacs conifg
 
