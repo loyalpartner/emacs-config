@@ -46,7 +46,7 @@ COMMENT kill ring
 其他
   #+BEGIN_SRC emacs-lisp
 
-
+  (setq inhibit-compacting-font-caches t)
     (setq indo-enable-flex-matching t)
 
     ;; (setq ido-everywhere t)
@@ -98,11 +98,11 @@ COMMENT kill ring
       :config (doom-modeline-mode 1)
       (use-package
 	doom-themes
-	:if (not IS-WINDOWS)
+	;;:if (not IS-WINDOWS)
 	:ensure t
 	:config (load-theme 'doom-one t)))
 
-    ;; (use-package molokai-theme :ensure t)
+    ;(use-package molokai-theme :ensure t)
     (use-package beacon :ensure t
       :config (beacon-mode 1))
   #+END_SRC
@@ -253,40 +253,53 @@ COMMENT kill ring
 
 ** company-mode
    #+BEGIN_SRC emacs-lisp
-     (use-package
-       company
-       :ensure t
-       :diminish ""
-       :commands global-company-mode
-       :bind (:map company-active-map
-                   ("C-n" . company-select-next)
-                   ("C-p" . company-select-previous))
-       :custom (company-idle-delay 0.2)
-       (company-selection-wrap-around
-        t)
-       (company-minimum-prefix-length
-        3)
-       (company-candidates-length 30)
-       (company-require-match nil)
-       (company-dabbrev-ignore-case
-        nil)
-       (company-dabbrev-downcase nil)
-       (company-show-numbers t)
-       :config (setq company-minimum-prefix-length
-                     3)
-       (global-company-mode)
-       (use-package
-         company-statistics
-         :ensure t
-         :config (company-statistics-mode))
-       (bind-keys
-        :map company-active-map
-        ("TAB" . company-complete)))
 
-     (use-package
-       company-quickhelp
+     (use-package company
        :ensure t
-       :config (company-quickhelp-mode 1))
+       :diminish company-mode
+       :defines (company-dabbrev-ignore-case company-dabbrev-downcase)
+       :commands company-abort
+       :bind (("M-/" . company-complete)
+              ("<backtab>" . company-yasnippet)
+              :map company-active-map
+              ("C-p" . company-select-previous)
+              ("C-n" . company-select-next)
+              ("<tab>" . company-complete-common-or-cycle)
+              ("<backtab>" . my-company-yasnippet)
+              ;; ("C-c C-y" . my-company-yasnippet)
+              :map company-search-map
+              ("C-p" . company-select-previous)
+              ("C-n" . company-select-next))
+       :hook (after-init . global-company-mode)
+       :init
+       (defun my-company-yasnippet ()
+         "Hide the current completeions and show snippets."
+         (interactive)
+         (company-abort)
+         (call-interactively 'company-yasnippet))
+       :config
+       (setq company-tooltip-align-annotations t
+             company-tooltip-limit 12
+             company-idle-delay 0.3
+             company-echo-delay (if (display-graphic-p) nil 0)
+             company-minimum-prefix-length 1
+             company-require-match nil
+             company-dabbrev-ignore-case nil
+             company-dabbrev-downcase nil))
+
+     ;; Better sorting and filtering
+     (use-package company-prescient
+       :ensure t
+       :init (company-prescient-mode 1))
+
+(use-package company-box
+:ensure t
+:hook (company-mode . company-box-mode))
+
+     (use-package company-tabnine
+       :ensure t
+       :config
+       (add-to-list 'company-backends #'company-tabnine))
 
      ;; (use-package
      ;;   company-ctags
@@ -353,7 +366,7 @@ COMMENT kill ring
     :config
     (atomic-chrome-start-server))
    #+END_SRC
-** COMMENT projectile
+** projectile
    #+BEGIN_SRC emacs-lisp
   ;; https://docs.projectile.mx/en/latest/
   (use-package projectile
@@ -470,15 +483,15 @@ COMMENT kill ring
 ** 输入法设置
    #+BEGIN_SRC emacs-lisp
      ;; rime
-	 ;;; https://github.com/tumashu/pyim#org37155c7
+         ;;; https://github.com/tumashu/pyim#org37155c7
      (use-package pyim
        :ensure nil
        :demand t
        :config
        ;; 激活 basedict 拼音词库，五笔用户请继续阅读 README
-       (use-package pyim-basedict
-	 :ensure t
-	 :config (pyim-basedict-enable))
+       ;; (use-package pyim-basedict
+       ;;   :ensure t
+       ;;   :config (pyim-basedict-enable))
 
        (setq default-input-method "pyim")
        (setq pyim-default-scheme 'xiaohe-shuangpin)
@@ -489,24 +502,25 @@ COMMENT kill ring
        (setq pyim-page-length 5)
        :bind
        (;("M-s" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
-	("C-;" . pyim-delete-word-from-personal-buffer)))
+        ("C-;" . pyim-delete-word-from-personal-buffer)))
+
      (when IS-MAC
        (use-package liberime
-	 :after pyim		      ;:load-path "~/tmp/.emacs.d/liberime.so"
-	 :load-path "liberime.so"
-	 :config
-	 ;; 注意事项:
-	 ;; 1. 文件路径需要用 `expand-file-name' 函数处理。
-	 ;; 2. `librime-start' 的第一个参数说明 "rime 共享数据文件夹"
-	 ;;     的位置，不同的平台其位置也各不相同，可以参考：
-	 ;;     https://github.com/rime/home/wiki/RimeWithSchemata
-	 (liberime-start
-	  "/Library/Input Methods/Squirrel.app/Contents/SharedSupport"
-	  (file-truename (concat emacs-root-dir "/pyim/rime/")))
-	 (liberime-select-schema "double_pinyin_flypy")
-	 (setq pyim-default-scheme 'rime)
-	 (setq default-input-method "pyim")
-	 (setq pyim-page-tooltip 'posframe)))
+         :after pyim                         ;:load-path "~/tmp/.emacs.d/liberime.so"
+         :load-path "liberime.so"
+         :config
+         ;; 注意事项:
+         ;; 1. 文件路径需要用 `expand-file-name' 函数处理。
+         ;; 2. `librime-start' 的第一个参数说明 "rime 共享数据文件夹"
+         ;;     的位置，不同的平台其位置也各不相同，可以参考：
+         ;;     https://github.com/rime/home/wiki/RimeWithSchemata
+         (liberime-start
+          "/Library/Input Methods/Squirrel.app/Contents/SharedSupport"
+          (file-truename (concat emacs-root-dir "/pyim/rime/")))
+         (liberime-select-schema "double_pinyin_flypy")
+         (setq pyim-default-scheme 'rime)
+         (setq default-input-method "pyim")
+         (setq pyim-page-tooltip 'posframe)))
    #+END_SRC
 ** other
    #+BEGIN_SRC emacs-lisp
@@ -547,7 +561,7 @@ COMMENT kill ring
   (setq tags-revert-without-query 1)
   (use-package ctags-update
     :ensure t
-    :hook (ahk . turn-on-ctags-auto-update-mode))
+    )
 #+END_SRC
 ** COMMENT smartparens
 被 electric-pair-mode 替换
@@ -610,10 +624,10 @@ COMMENT kill ring
 
 ** autohotkey
    #+BEGIN_SRC emacs-lisp
-  (use-package ahk-mode
-    :ensure t
-    :if IS-WINDOWS)
-
+       (use-package ahk-mode
+         :ensure t
+         :if IS-WINDOWS
+         :config (turn-on-ctags-auto-update-mode))
    #+END_SRC
 ** javascript
    #+BEGIN_SRC emacs-lisp
@@ -709,7 +723,7 @@ COMMENT kill ring
           (setq org-mobile-directory "~/mobile")
           (setq org-mobile-inbox-for-pull "~/mobile/index.org"))
   #+END_SRC
-* lazy cat' toolset
+* lazycat' toolset
 ** snails 快速搜索
    #+BEGIN_SRC emacs-lisp
   (use-package snails :commands snails :if IS-MAC)
@@ -1166,8 +1180,6 @@ COMMENT kill ring
   (global-set-key [remap recentf-open-files] 'counsel-recentf)
   (global-set-key [remap xah-open-file-fast] 'counsel-bookmark)
 
-  (setq ivy-initial-inputs-alist nil)
-
   (defun my-bindkey-xfk-insert-mode ()
     "Define keys for `xah-fly-insert-mode-activate-hook'"
     (interactive)
@@ -1195,6 +1207,7 @@ COMMENT kill ring
   (defun my-bindkey-xfk-command-mode ()
     "Define keys for `xah-fly-command-mode-activate-hook'"
     (interactive)
+    (setq ivy-initial-inputs-alist nil)
     (define-key xah-fly-key-map (kbd "Y") 'youdao-dictionary-search-at-point-posframe)
     (define-key xah-fly-key-map (kbd "T") 'google-translate-at-point)
     (define-key xah-fly-key-map (kbd "G") 'magit-status)
@@ -1217,6 +1230,7 @@ COMMENT kill ring
     (define-key xah-fly-key-map (kbd "M-s") nil)
     (when current-input-method (deactivate-input-method)) ; disable input
     )
+
 
   (add-hook 'xah-fly-insert-mode-activate-hook 'my-bindkey-xfk-insert-mode)
   (add-hook 'xah-fly-command-mode-activate-hook 'my-bindkey-xfk-command-mode)
