@@ -24,12 +24,18 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package)
-  (use-package exec-path-from-shell
-    :if (memq window-system '(mac ns))
-    :ensure t
-    :config
-    (exec-path-from-shell-initialize)))
+  )
 
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns))
+  :ensure t
+  :config
+  ;; (setenv "SHELL" "/bin/zsh")
+  ;; (setq exec-path-from-shell-variables '("PATH" "MANPATH" "GOROOT" "GOPATH" "EDITOR" "PYTHONPATH"))
+;; 设成nil 则不从 .zshrc 读 只从 .zshenv读（可以加快速度，但是需要你将环境变量相关的都放到 .zshenv 中，而非 .zshrc 中）
+  ;; (setq exec-path-from-shell-check-startup-files nil) ;
+  ;; (setq exec-path-from-shell-arguments '("-l" )) ;remove -i read form .zshenv
+  (exec-path-from-shell-initialize))
 
 (defun add-subdirs-to-load-path (dir)
   "Recursive add directories to `load-path'."

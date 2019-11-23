@@ -280,7 +280,7 @@ COMMENT kill ring
        :config
        (setq company-tooltip-align-annotations t
              company-tooltip-limit 12
-             company-idle-delay 0.3
+             ;; company-idle-delay 0.3
              company-echo-delay (if (display-graphic-p) nil 0)
              company-minimum-prefix-length 1
              company-require-match nil
@@ -292,9 +292,9 @@ COMMENT kill ring
        :ensure t
        :init (company-prescient-mode 1))
 
-(use-package company-box
-:ensure t
-:hook (company-mode . company-box-mode))
+     ;; (use-package company-box
+     ;;   :ensure t
+     ;;   :hook (company-mode . company-box-mode))
 
      (use-package company-tabnine
        :ensure t
@@ -506,7 +506,7 @@ COMMENT kill ring
 
      (when IS-MAC
        (use-package liberime
-         :after pyim                         ;:load-path "~/tmp/.emacs.d/liberime.so"
+         ;:after pyim                         ;:load-path "~/tmp/.emacs.d/liberime.so"
          :load-path "liberime.so"
          :config
          ;; 注意事项:
